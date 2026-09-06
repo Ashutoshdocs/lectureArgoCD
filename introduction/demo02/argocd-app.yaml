@@ -16,7 +16,7 @@ spec:
     # NOTE: the space in "lecture argoCD" is fine here (YAML treats it as
     # a plain string), but spaces in paths cause pain everywhere else
     # (git, shells, tools). Renaming to "lecture-argocd" is recommended.
-    path: "lecture argoCD/introduction/demo02"
+    path: "lectureArgoCD/introduction/demo02"
 
   destination:
     server: https://kubernetes.default.svc
