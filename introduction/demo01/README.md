@@ -144,7 +144,7 @@ kubectl get pods -n argocd -w
 For this lab, use port-forwarding:
 
 ```bash
-kubectl port-forward svc/argocd-server -n argocd 8080:443
+ kubectl port-forward svc/argocd-server -n argocd 8080:443 --address=0.0.0.0
 ```
 
 Open:
