@@ -10,7 +10,7 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/YOUR-USERNAME/argocd-basic-demo.git
+    repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
     targetRevision: HEAD
     # Path to the folder that holds kustomization.yaml.
     # NOTE: the space in "lecture argoCD" is fine here (YAML treats it as
