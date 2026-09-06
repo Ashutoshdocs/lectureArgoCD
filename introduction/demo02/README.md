@@ -99,7 +99,11 @@ old ConfigMap pruned      rolling update → new HTML served
 ```
 
 ---
-
+```
+kubectl -n argocd get secret argocd-initial-admin-secret \
+  -o jsonpath="{.data.password}" | base64 -d
+```
+---
 # 4. `index.html` — the Page (source of truth)
 
 This is the file you edit. It is a self-contained, responsive page.
