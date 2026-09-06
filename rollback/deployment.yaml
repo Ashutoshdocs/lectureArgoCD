@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: nginx-rollback
+
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: nginx-rollback
+
+  template:
+    metadata:
+      labels:
+        app: nginx-rollback
+
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.27
+
+          ports:
+            - containerPort: 80
+
+          volumeMounts:
+            - name: html
+              mountPath: /usr/share/nginx/html
+              readOnly: true
+
+      volumes:
+        - name: html
+          configMap:
+            # Kustomize rewrites this to the hashed name (nginx-html-<hash>),
+            # so every index.html change is a new revision you can roll back to.
+            name: nginx-html

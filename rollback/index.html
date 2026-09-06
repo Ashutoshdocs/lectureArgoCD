@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rollback Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      /* ┌─────────────────────────────────────────────┐
+         │  EDIT THESE TWO LINES TO MAKE A NEW VERSION │
+         └─────────────────────────────────────────────┘ */
+      --accent: #0f9d8f;        /* v1 = teal   (v2 try: #e8622c) */
+      --version: "v1";          /* shown in the big tag         */
+
+      --paper: #0e1116; --ink: #f2f4f8; --muted: #99a2b2;
+      --line: #242a34; --card: #161b22; --radius: 16px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background:
+        radial-gradient(900px 500px at 80% -20%, color-mix(in srgb, var(--accent) 22%, transparent) 0%, rgba(0,0,0,0) 60%),
+        var(--paper);
+      color: var(--ink);
+      font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
+      line-height: 1.5; min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: clamp(20px, 5vw, 56px);
+    }
+    .card {
+      width: 100%; max-width: 760px;
+      background: var(--card); border: 1px solid var(--line);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .banner { height: 6px; background: var(--accent); }
+    .body { padding: clamp(28px, 6vw, 52px); }
+
+    .tag {
+      display: inline-flex; align-items: baseline; gap: 4px;
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: clamp(40px, 12vw, 84px); font-weight: 500;
+      color: var(--accent); line-height: 1; letter-spacing: -0.02em;
+      margin: 0 0 18px;
+    }
+    .tag::before { content: var(--version); }
+
+    h1 {
+      font-size: clamp(26px, 5vw, 40px); font-weight: 700;
+      letter-spacing: -0.02em; margin: 0 0 14px;
+    }
+    p.lede { color: var(--muted); font-size: clamp(16px, 2.3vw, 19px); max-width: 56ch; margin: 0 0 28px; }
+
+    .meta { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
+    .chip {
+      font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 13px;
+      color: var(--muted); border: 1px solid var(--line);
+      border-radius: 999px; padding: 6px 12px;
+    }
+    .chip b { color: var(--ink); font-weight: 500; }
+
+    .hint {
+      border-left: 3px solid var(--accent);
+      background: color-mix(in srgb, var(--accent) 8%, transparent);
+      border-radius: 8px; padding: 14px 16px;
+      color: var(--muted); font-size: 14px;
+    }
+    .hint code { color: var(--ink); font-family: "IBM Plex Mono", monospace; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="banner" aria-hidden="true"></div>
+    <div class="body">
+      <p class="tag" aria-label="current version"></p>
+      <h1>You are looking at Version 1.</h1>
+      <p class="lede">
+        This page is stored in Git and deployed by Argo CD. Ship a new version by
+        editing <code>index.html</code>; roll back by pointing Argo CD at an
+        earlier revision. The colour and tag above change with each version, so a
+        rollback is obvious at a glance.
+      </p>
+
+      <div class="meta">
+        <span class="chip">app:&nbsp;<b>nginx-rollback</b></span>
+        <span class="chip">ns:&nbsp;<b>rollback-demo</b></span>
+        <span class="chip">port:&nbsp;<b>30081</b></span>
+      </div>
+
+      <p class="hint">
+        Next: change <code>--accent</code> and <code>--version</code> at the top of
+        this file, commit, and push. Then roll back and watch this go teal again.
+      </p>
+    </div>
+  </main>
+</body>
+</html>

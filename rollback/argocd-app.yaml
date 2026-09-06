@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+
+metadata:
+  name: nginx-rollback
+  namespace: argocd
+
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/YOUR-USERNAME/argocd-basic-demo.git
+    targetRevision: HEAD
+    path: lectureArgoCD/rollback
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: rollback-demo
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
