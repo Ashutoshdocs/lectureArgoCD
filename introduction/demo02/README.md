@@ -360,7 +360,7 @@ git push
 Then register the Application (one time):
 
 ```bash
-kubectl apply -f "lecture argoCD/introduction/demo02/argocd-app.yaml"
+kubectl apply -f "lectureArgoCD/introduction/demo02/argocd-app.yaml"
 ```
 
 Check status:
