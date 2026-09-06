@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Deployed by Argo CD</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #f4f5f7;
+      --ink: #151a2d;
+      --muted: #656d84;
+      --line: #dde0e7;
+      --card: #ffffff;
+      --indigo: #4340c9;
+      --sync: #12915a;
+      --signal: #e8622c;
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { margin: 0; padding: 0; }
+
+    body {
+      background:
+        radial-gradient(1200px 600px at 85% -10%, #e9e8fb 0%, rgba(233,232,251,0) 55%),
+        var(--paper);
+      color: var(--ink);
+      font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: clamp(20px, 5vw, 56px);
+    }
+
+    .wrap { width: 100%; max-width: 880px; }
+
+    .mono {
+      font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+      font-variant-ligatures: none;
+    }
+
+    /* top bar */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: clamp(32px, 7vw, 64px);
+    }
+
+    .ref {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--muted);
+      background: var(--card);
+      border: 1px solid var(--line);
+      padding: 7px 12px;
+      border-radius: 999px;
+    }
+    .ref b { color: var(--ink); font-weight: 600; }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--sync);
+      background: rgba(18, 145, 90, 0.09);
+      border: 1px solid rgba(18, 145, 90, 0.25);
+      padding: 7px 14px 7px 12px;
+      border-radius: 999px;
+    }
+    .dot {
+      width: 9px; height: 9px; border-radius: 50%;
+      background: var(--sync);
+      box-shadow: 0 0 0 0 rgba(18, 145, 90, 0.5);
+      animation: pulse 2.2s ease-out infinite;
+    }
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(18, 145, 90, 0.45); }
+      70%  { box-shadow: 0 0 0 10px rgba(18, 145, 90, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(18, 145, 90, 0); }
+    }
+
+    /* hero */
+    .kicker { color: var(--indigo); font-weight: 600; font-size: 15px; margin: 0 0 14px; }
+    h1 {
+      font-size: clamp(38px, 8vw, 68px);
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+      font-weight: 700;
+      margin: 0 0 20px;
+    }
+    .lede {
+      font-size: clamp(17px, 2.4vw, 20px);
+      color: var(--muted);
+      max-width: 60ch;
+      margin: 0 0 clamp(28px, 5vw, 44px);
+    }
+
+    /* the editable proof line — the single bold element */
+    .proof {
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--signal);
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin-bottom: clamp(32px, 6vw, 52px);
+    }
+    .proof .label { font-size: 13px; color: var(--muted); margin: 0 0 8px; }
+    .proof .value {
+      font-size: clamp(22px, 4vw, 30px);
+      font-weight: 600;
+      color: var(--signal);
+      margin: 0;
+    }
+
+    /* pipeline flow */
+    .flow {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: stretch;
+      gap: 10px;
+      margin-bottom: clamp(32px, 6vw, 52px);
+    }
+    .node {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 14px;
+      text-align: center;
+    }
+    .node .n-title { font-weight: 600; font-size: 15px; }
+    .node .n-sub { font-size: 12px; color: var(--muted); margin-top: 3px; }
+    .arrow {
+      display: flex; align-items: center; justify-content: center;
+      color: var(--indigo); font-size: 20px; font-weight: 600;
+    }
+
+    /* manifest facts */
+    .facts {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: clamp(32px, 6vw, 52px);
+    }
+    .fact {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+    }
+    .fact .k { font-size: 12px; color: var(--muted); margin: 0 0 6px; }
+    .fact .v { font-size: 15px; word-break: break-word; }
+
+    footer {
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid var(--line);
+      padding-top: 20px;
+    }
+
+    @media (max-width: 620px) {
+      .flow { grid-template-columns: 1fr; }
+      .arrow { transform: rotate(90deg); padding: 2px 0; }
+      .facts { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .dot { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="topbar">
+      <span class="ref mono">repo:&nbsp;<b>argocd-basic-demo</b>&nbsp;· path:&nbsp;<b>demo02</b></span>
+      <span class="status"><span class="dot" aria-hidden="true"></span>Synced · Healthy</span>
+    </div>
+
+    <p class="kicker">GitOps, live</p>
+    <h1>This page shipped itself from Git.</h1>
+    <p class="lede">
+      Nobody ran <span class="mono">kubectl apply</span> for this. The HTML you're reading lives
+      in a ConfigMap generated from <span class="mono">index.html</span>. Argo CD watches the
+      repository and keeps the cluster matching it — commit a change and it lands here on its own.
+    </p>
+
+    <!-- Change the line below, commit, and push. Watch it update after Argo CD syncs. -->
+    <section class="proof" aria-label="Live edit marker">
+      <p class="label">Edit this line in <span class="mono">index.html</span>, then push:</p>
+      <p class="value mono">Revision 1 — hello from GitOps 👋</p>
+    </section>
+
+    <section class="flow" aria-label="Deployment pipeline">
+      <div class="node">
+        <div class="n-title">Git</div>
+        <div class="n-sub mono">desired state</div>
+      </div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="node">
+        <div class="n-title">Argo CD</div>
+        <div class="n-sub mono">reconciles</div>
+      </div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="node">
+        <div class="n-title">Kubernetes</div>
+        <div class="n-sub mono">current state</div>
+      </div>
+    </section>
+
+    <section class="facts" aria-label="Deployment details">
+      <div class="fact">
+        <p class="k">Served by</p>
+        <p class="v mono">nginx:1.27</p>
+      </div>
+      <div class="fact">
+        <p class="k">Namespace</p>
+        <p class="v mono">nginx-demo</p>
+      </div>
+      <div class="fact">
+        <p class="k">Exposed on</p>
+        <p class="v mono">NodePort 30080</p>
+      </div>
+    </section>
+
+    <footer>
+      Content mounted read-only from a Kustomize-generated ConfigMap. Sync policy:
+      <span class="mono">automated · prune · selfHeal</span>.
+    </footer>
+  </main>
+</body>
+</html>

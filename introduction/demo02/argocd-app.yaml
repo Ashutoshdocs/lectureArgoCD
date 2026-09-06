@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+
+metadata:
+  name: nginx-demo
+  namespace: argocd
+
+spec:
+
+  project: default
+
+  source:
+    repoURL: https://github.com/YOUR-USERNAME/argocd-basic-demo.git
+    targetRevision: HEAD
+    # Path to the folder that holds kustomization.yaml.
+    # NOTE: the space in "lecture argoCD" is fine here (YAML treats it as
+    # a plain string), but spaces in paths cause pain everywhere else
+    # (git, shells, tools). Renaming to "lecture-argocd" is recommended.
+    path: "lecture argoCD/introduction/demo02"
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nginx-demo
+
+  syncPolicy:
+
+    automated:
+      prune: true
+      selfHeal: true
+
+    syncOptions:
+      - CreateNamespace=true

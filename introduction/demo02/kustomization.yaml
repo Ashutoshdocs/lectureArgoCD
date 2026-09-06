@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - deployment.yaml
+  - service.yaml
+
+# Generates a ConfigMap named nginx-html-<hash> from index.html.
+# The <hash> is derived from the file contents, so editing index.html
+# produces a new ConfigMap name -> the Deployment's volume reference is
+# rewritten -> a rolling update happens automatically on the next sync.
+configMapGenerator:
+  - name: nginx-html
+    files:
+      - index.html
