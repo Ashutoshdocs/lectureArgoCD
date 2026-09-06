@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
     targetRevision: HEAD
-    path: lectureArgoCD/rollback
+    path: rollback
 
   destination:
     server: https://kubernetes.default.svc
