@@ -121,7 +121,7 @@ kubectl create namespace argocd
 Install Argo CD:
 
 ```bash
-kubectl apply -n argocd \
+kubectl apply --server-side -n argocd \
   -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 ```
 
