@@ -9,7 +9,7 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/YOUR-USERNAME/argocd-basic-demo.git
+    repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
     targetRevision: HEAD
     path: lectureArgoCD/rollback
 
