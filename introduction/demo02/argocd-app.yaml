@@ -6,24 +6,18 @@ metadata:
   namespace: argocd
 
 spec:
-
   project: default
 
   source:
     repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
     targetRevision: HEAD
-    # Path to the folder that holds kustomization.yaml.
-    # NOTE: the space in "lecture argoCD" is fine here (YAML treats it as
-    # a plain string), but spaces in paths cause pain everywhere else
-    # (git, shells, tools). Renaming to "lecture-argocd" is recommended.
-    path: "lectureArgoCD/introduction/demo02"
+    path: introduction/demo02
 
   destination:
     server: https://kubernetes.default.svc
     namespace: nginx-demo
 
   syncPolicy:
-
     automated:
       prune: true
       selfHeal: true
