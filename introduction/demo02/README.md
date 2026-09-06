@@ -103,6 +103,12 @@ old ConfigMap pruned      rolling update → new HTML served
 To Get the ui password of argocd:
 kubectl -n argocd get secret argocd-initial-admin-secret \
   -o jsonpath="{.data.password}" | base64 -d
+
+
+For port forward use: kubectl port-forward svc/argocd-server -n argocd 8080:443 --address=0.0.0.0
+
+
+
 ```
 ---
 # 4. `index.html` — the Page (source of truth)
