@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
     targetRevision: main
-    path: deployment-strategies-demo/stable-canary/manifests
+    path: deploymentstratergies/stable-canary/manifests
   destination:
     server: https://kubernetes.default.svc
     namespace: stable-canary
