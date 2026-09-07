@@ -6,9 +6,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/YOUR_USERNAME/YOUR_REPO.git
+    repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
     targetRevision: main
-    path: deployment-strategies-demo/blue-green/manifests
+    path: deploymentstratergies/blue-green/manifests
   destination:
     server: https://kubernetes.default.svc
     namespace: blue-green
