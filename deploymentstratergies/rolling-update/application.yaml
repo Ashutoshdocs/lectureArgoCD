@@ -9,10 +9,10 @@ spec:
   project: default
   source:
     # CHANGE to your fork/repo URL.
-    repoURL: https://github.com/YOUR_USERNAME/YOUR_REPO.git
+    repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
     targetRevision: main
     # Path to the manifests folder inside your repo. Adjust if you nested it.
-    path: deployment-strategies-demo/rolling-update/manifests
+    path: deploymentstratergies/rolling-update/manifests
   destination:
     server: https://kubernetes.default.svc
     namespace: rolling-update
