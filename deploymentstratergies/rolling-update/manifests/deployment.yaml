@@ -1,0 +1,37 @@
+# Rolling Update: pods are replaced a few at a time. No downtime, but during
+# the rollout BOTH versions serve traffic simultaneously (you'll see a mix
+# of v1 and v2 in the browser until the rollout finishes).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rolling-demo
+  namespace: rolling-update
+  labels:
+    app: rolling-demo
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1          # create at most 1 extra pod above desired count
+      maxUnavailable: 0    # never drop below desired count -> zero downtime
+  selector:
+    matchLabels:
+      app: rolling-demo
+  template:
+    metadata:
+      labels:
+        app: rolling-demo
+    spec:
+      containers:
+        - name: hello
+          # CHANGE THIS TAG to 2.0 (then commit) to trigger the rolling update.
+          image: gcr.io/google-samples/hello-app:1.0
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 2
+            periodSeconds: 3

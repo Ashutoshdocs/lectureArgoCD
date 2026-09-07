@@ -1,0 +1,35 @@
+# Recreate (Downtime): ALL old pods are terminated first, THEN new pods are
+# created. Between the two phases there are zero running pods, so the app is
+# briefly unreachable (the browser shows a connection error / 503). This is
+# the strategy to demonstrate what a naive deploy looks like.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: downtime-demo
+  namespace: recreate-downtime
+  labels:
+    app: downtime-demo
+spec:
+  replicas: 4
+  strategy:
+    type: Recreate      # <-- causes downtime on every update
+  selector:
+    matchLabels:
+      app: downtime-demo
+  template:
+    metadata:
+      labels:
+        app: downtime-demo
+    spec:
+      containers:
+        - name: hello
+          # CHANGE THIS TAG to 2.0 (then commit) to trigger a recreate update.
+          image: gcr.io/google-samples/hello-app:1.0
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 2
+            periodSeconds: 3

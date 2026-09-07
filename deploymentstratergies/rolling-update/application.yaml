@@ -1,0 +1,24 @@
+# Apply this manually:  kubectl apply -f application.yaml
+# It is NOT inside manifests/, so ArgoCD will not try to manage itself.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rolling-update-demo
+  namespace: argocd
+spec:
+  project: default
+  source:
+    # CHANGE to your fork/repo URL.
+    repoURL: https://github.com/YOUR_USERNAME/YOUR_REPO.git
+    targetRevision: main
+    # Path to the manifests folder inside your repo. Adjust if you nested it.
+    path: deployment-strategies-demo/rolling-update/manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: rolling-update
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

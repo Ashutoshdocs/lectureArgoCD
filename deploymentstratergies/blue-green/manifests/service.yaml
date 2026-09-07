@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bluegreen-demo
+  namespace: blue-green
+spec:
+  type: NodePort
+  # THE SWITCH: this selector decides which version is live.
+  # Start on blue. To "cut over", change color to green, commit, and let
+  # ArgoCD sync. The cutover is instant and there is never a mix of versions.
+  selector:
+    app: bluegreen-demo
+    color: blue          # <-- change to: green   to release v2
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+      nodePort: 30083     # browser: http://<node-ip>:30083

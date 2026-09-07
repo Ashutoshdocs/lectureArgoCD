@@ -1,0 +1,34 @@
+# GREEN = the new version (v2). Deployed alongside blue and fully warmed up
+# BEFORE any traffic is sent to it. Traffic only moves when the Service
+# selector is flipped from color: blue to color: green.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bluegreen-green
+  namespace: blue-green
+  labels:
+    app: bluegreen-demo
+    color: green
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: bluegreen-demo
+      color: green
+  template:
+    metadata:
+      labels:
+        app: bluegreen-demo
+        color: green
+    spec:
+      containers:
+        - name: hello
+          image: gcr.io/google-samples/hello-app:2.0   # v2
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 2
+            periodSeconds: 3

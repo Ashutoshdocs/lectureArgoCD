@@ -1,0 +1,35 @@
+# STABLE = the trusted version (v1). Carries the bulk of the traffic.
+# The Service selects on app=canary-demo only, so it load-balances across
+# BOTH stable and canary pods. Traffic split is proportional to replica count.
+# 4 stable + 1 canary  ->  ~80% v1, ~20% v2.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: canary-stable
+  namespace: stable-canary
+  labels:
+    app: canary-demo
+    track: stable
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: canary-demo
+      track: stable
+  template:
+    metadata:
+      labels:
+        app: canary-demo
+        track: stable
+    spec:
+      containers:
+        - name: hello
+          image: gcr.io/google-samples/hello-app:1.0   # v1
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 2
+            periodSeconds: 3
