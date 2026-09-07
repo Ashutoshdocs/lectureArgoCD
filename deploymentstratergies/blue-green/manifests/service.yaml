@@ -10,7 +10,7 @@ spec:
   # ArgoCD sync. The cutover is instant and there is never a mix of versions.
   selector:
     app: bluegreen-demo
-    color: blue          # <-- change to: green   to release v2
+    color: green           # <-- change to: green   to release v2
   ports:
     - name: http
       port: 80
