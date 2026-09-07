@@ -24,7 +24,7 @@ spec:
       containers:
         - name: hello
           # CHANGE THIS TAG to 2.0 (then commit) to trigger a recreate update.
-          image: gcr.io/google-samples/hello-app:1.0
+          image: gcr.io/google-samples/hello-app:2.0   # EITHER 1.0 OR 2.0
           ports:
             - containerPort: 8080
           readinessProbe:
