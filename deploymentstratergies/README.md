@@ -52,7 +52,7 @@ kubectl -n argocd rollout status deploy/argocd-server
 
 Open the ArgoCD UI (optional but nice for watching syncs):
 ```bash
-kubectl -n argocd port-forward svc/argocd-server 8080:443
+ kubectl port-forward svc/argocd-server -n argocd 8080:443 --address=0.0.0.0
 # then open https://localhost:8080
 # username: admin
 # password:
