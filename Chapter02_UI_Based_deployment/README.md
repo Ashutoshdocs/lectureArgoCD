@@ -52,7 +52,9 @@ kubectl wait --for=condition=available --timeout=300s \
 Port-forward the ArgoCD API server to your machine:
 
 ```bash
-kubectl port-forward svc/argocd-server -n argocd 8080:443
+kubectl get svc -n argocd argocd-server
+kubectl patch svc argocd-server -n argocd -p '{"spec":{"type":"NodePort"}}'
+kubectl get svc -n argocd argocd-server
 ```
 
 Now open **https://localhost:8080** in your browser
