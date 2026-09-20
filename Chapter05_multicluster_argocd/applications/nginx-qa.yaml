@@ -1,0 +1,23 @@
+# nginx-qa → deploys to the QA cluster (a different VM).
+# Register it first:  argocd cluster add <qa-context>
+# Then copy its server URL from `argocd cluster list` into destination.server below.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-qa
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
+    targetRevision: main
+    path: Chapter05_multicluster_argocd/apps/qa
+  destination:
+    server: https://<QA_CLUSTER_API_SERVER>:6443   # <-- from `argocd cluster list`
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

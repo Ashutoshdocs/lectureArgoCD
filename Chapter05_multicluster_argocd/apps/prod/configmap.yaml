@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-content
+  namespace: default
+  labels:
+    app: web
+    env: prod
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>PROD • ArgoCD Multicluster</title>
+      <style>
+        :root{color-scheme:dark}
+        *{box-sizing:border-box}
+        body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+             font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+             background:radial-gradient(circle at 50% 15%,#ef4444 0%,#dc2626 40%,#7f1d1d 100%);
+             color:#fff1f2}
+        .card{padding:3rem 3.75rem;border-radius:22px;background:rgba(0,0,0,.30);
+              border:1px solid rgba(255,255,255,.18);text-align:center;
+              box-shadow:0 24px 70px rgba(0,0,0,.5);max-width:520px}
+        .tag{display:inline-block;padding:.35rem 1rem;border-radius:999px;font-weight:800;
+             letter-spacing:2px;background:#f87171;color:#4c0519;font-size:.8rem}
+        h1{margin:.9rem 0 .3rem;font-size:3rem;text-shadow:0 2px 20px rgba(248,113,113,.6)}
+        p{margin:.35rem 0;color:#fecdd3}
+        .meta{margin-top:1.4rem;font-size:.85rem;color:#fda4af;border-top:1px solid rgba(255,255,255,.15);padding-top:1rem}
+        code{background:rgba(255,255,255,.12);padding:.1rem .4rem;border-radius:6px}
+      </style>
+    </head>
+    <body>
+      <div class="card">
+        <span class="tag">PRODUCTION</span>
+        <h1>🚀 Prod Cluster</h1>
+        <p>Live traffic. Handle with care — this is the real thing.</p>
+        <p>Deployed by <strong>ArgoCD</strong> — the same manifests, promoted safely.</p>
+        <div class="meta">
+          Environment: <code>prod</code> &nbsp;•&nbsp; App: <code>nginx-prod</code><br/>
+          Managed by ArgoCD • GitOps ✨
+        </div>
+      </div>
+    </body>
+    </html>
+
+  default.conf: |
+    server {
+      listen 80;
+      server_name _;
+      location / { root /usr/share/nginx/html; index index.html; }
+    }

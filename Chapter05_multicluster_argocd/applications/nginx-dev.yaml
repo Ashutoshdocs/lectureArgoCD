@@ -1,0 +1,24 @@
+# nginx-dev → deploys to the DEV cluster.
+# If ArgoCD itself runs on the dev VM, dev is the in-cluster target
+# (https://kubernetes.default.svc). Otherwise put the dev cluster URL from
+# `argocd cluster list`.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-dev
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
+    targetRevision: main
+    path: Chapter05_multicluster_argocd/apps/dev
+  destination:
+    server: https://kubernetes.default.svc   # dev = in-cluster (ArgoCD's own cluster)
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
