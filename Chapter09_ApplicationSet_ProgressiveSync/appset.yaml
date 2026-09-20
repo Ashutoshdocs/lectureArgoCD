@@ -1,0 +1,60 @@
+# ApplicationSet with PROGRESSIVE SYNC (RollingSync).
+# A List generator makes 3 apps (dev/qa/prod). When they go OutOfSync (you bump the
+# version in Git), RollingSync updates them in ORDER — dev → qa → prod — and waits
+# for each step's apps to be Healthy+Synced before starting the next.
+#
+# ⚠️ Requires the progressive-sync feature flag on the applicationset controller:
+#     kubectl -n argocd set env deploy/argocd-applicationset-controller \
+#       ARGOCD_APPLICATIONSET_CONTROLLER_ENABLE_PROGRESSIVE_SYNCS=true
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: web-progressive
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+
+  # --- Progressive rollout order ---
+  strategy:
+    type: RollingSync
+    rollingSync:
+      steps:
+        - matchExpressions:
+            - key: env
+              operator: In
+              values: [dev]        # wave 1
+        - matchExpressions:
+            - key: env
+              operator: In
+              values: [qa]         # wave 2 (after dev Healthy)
+        - matchExpressions:
+            - key: env
+              operator: In
+              values: [prod]       # wave 3 (after qa Healthy)
+
+  generators:
+    - list:
+        elements:
+          - env: dev
+          - env: qa
+          - env: prod
+
+  template:
+    metadata:
+      name: 'web-{{.env}}'
+      labels:
+        env: '{{.env}}'            # RollingSync steps match on THIS label
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
+        targetRevision: main
+        path: 'Chapter09_ApplicationSet_ProgressiveSync/apps/{{.env}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{.env}}'
+      syncPolicy:
+        automated: { prune: true, selfHeal: true }
+        syncOptions:
+          - CreateNamespace=true

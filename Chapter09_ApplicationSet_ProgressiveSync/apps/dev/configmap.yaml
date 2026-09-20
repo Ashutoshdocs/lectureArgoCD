@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-content
+  labels: { app: web, env: dev }
+data:
+  # 👇 CHANGE THIS VERSION (in all 3 envs) to trigger a progressive rollout.
+  index.html: |
+    <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>DEV • Progressive Sync</title>
+    <style>
+      body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+           font-family:system-ui,sans-serif;
+           background:radial-gradient(circle at 50% 15%,#10b981 0%,#059669 40%,#064e3b 100%);color:#ecfdf5}
+      .card{padding:3rem 3.75rem;border-radius:22px;background:rgba(0,0,0,.28);
+            border:1px solid rgba(255,255,255,.18);text-align:center;max-width:520px;
+            box-shadow:0 24px 70px rgba(0,0,0,.45)}
+      .tag{display:inline-block;padding:.35rem 1rem;border-radius:999px;font-weight:800;
+           letter-spacing:2px;background:#34d399;color:#053b2c;font-size:.8rem}
+      .ver{font-size:3.2rem;font-weight:900;margin:.6rem 0}
+      h1{margin:.3rem 0;font-size:1.4rem}p{margin:.35rem 0;color:#d1fae5}
+      code{background:rgba(255,255,255,.12);padding:.1rem .4rem;border-radius:6px}
+    </style></head><body>
+      <div class="card"><span class="tag">DEV • wave 1</span>
+        <div class="ver">v1.0.0</div>
+        <h1>🌱 Dev environment</h1>
+        <p>RollingSync updates <strong>dev first</strong>, then waits for it to be Healthy.</p>
+        <p>env: <code>dev</code> • NodePort <code>30081</code></p>
+      </div></body></html>
+
+  default.conf: |
+    server { listen 80; server_name _; location / { root /usr/share/nginx/html; index index.html; } }
