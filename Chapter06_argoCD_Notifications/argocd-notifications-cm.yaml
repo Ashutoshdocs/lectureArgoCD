@@ -6,7 +6,7 @@ metadata:
 data:
   # Context section: defines variables available in notification templates
   context: |
-    argocdUrl: "http://<your-argocd-server>:8080"  # Replace with your ArgoCD server URL (public IP/host)
+    argocdUrl: "https://20.219.31.240:32664"  # Replace with your ArgoCD server URL (public IP/host)
 
   # Email service configuration: SMTP settings for sending emails.
   # ".email" is the notifier name → subscriptions reference it as ".email".
