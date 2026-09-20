@@ -179,7 +179,9 @@ kubectl get svc -n argocd
 ### 4. Expose ArgoCD server
 
 ```bash
-kubectl port-forward svc/argocd-server -n argocd 8080:443 --address=0.0.0.0 &
+kubectl get svc -n argocd argocd-server
+kubectl patch svc argocd-server -n argocd -p '{"spec":{"type":"NodePort"}}'
+kubectl get svc -n argocd argocd-server
 ```
 
 Access → **[https://<instance_public_ip>:8080](https://<instance_public_ip>:8080)**
