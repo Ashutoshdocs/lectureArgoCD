@@ -78,11 +78,11 @@ git init
 git add .
 git commit -m "nginx argocd demo"
 git branch -M main
-git remote add origin https://github.com/<your-user>/nginx-argocd-demo.git
+git remote add origin https://github.com/<userName>/lectureArgoCD.git
 git push -u origin main
 ```
 
-Note the repo URL and the path to the manifests folder: **`manifests`**.
+Note the repo URL and the path to the manifests folder: **`Chapter02_UI_Based_deployment/manifests`**.
 
 ---
 
