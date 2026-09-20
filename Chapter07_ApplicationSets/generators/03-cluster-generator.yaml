@@ -1,0 +1,33 @@
+# Generator 3 (MORE #2): CLUSTER
+# Creates ONE Application per cluster registered in ArgoCD (from `argocd cluster add`).
+# Deploys the SAME app to every cluster — add a cluster later and it self-populates.
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: web-clusters
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - clusters: {}          # ALL registered clusters, including the local "in-cluster"
+      # To target a subset, label clusters and select them:
+      # - clusters:
+      #     selector:
+      #       matchLabels:
+      #         environment: prod
+  template:
+    metadata:
+      name: 'web-{{.name}}'       # cluster name → app name (web-in-cluster, web-qa, …)
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
+        targetRevision: main
+        path: Chapter07_ApplicationSets/cluster-app
+      destination:
+        server: '{{.server}}'     # the cluster's API server URL, filled per cluster
+        namespace: appset-cluster
+      syncPolicy:
+        automated: { prune: true, selfHeal: true }
+        syncOptions: ["CreateNamespace=true"]

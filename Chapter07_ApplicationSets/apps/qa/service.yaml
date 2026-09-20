@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+  labels: { app: web, env: qa }
+spec:
+  type: ClusterIP
+  selector: { app: web, env: qa }
+  ports: [{ name: http, port: 80, targetPort: 80 }]

@@ -1,0 +1,36 @@
+# Generator 4 (BONUS): MATRIX  =  CLUSTERS  ×  GIT directories
+# The matrix multiplies two generators: every env folder is deployed to every
+# cluster → a full grid (e.g. 3 envs × 3 clusters = 9 Applications).
+# Parameters from BOTH child generators are available in the template.
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: web-matrix
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - matrix:
+        generators:
+          - clusters: {}                       # gives {{.name}}, {{.server}}
+          - git:                               # gives {{.path.path}}, {{.path.basename}}
+              repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
+              revision: main
+              directories:
+                - path: Chapter07_ApplicationSets/apps/*
+  template:
+    metadata:
+      name: 'web-{{.path.basename}}-{{.name}}'   # unique: env + cluster
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
+        targetRevision: main
+        path: '{{.path.path}}'
+      destination:
+        server: '{{.server}}'
+        namespace: '{{.path.basename}}'
+      syncPolicy:
+        automated: { prune: true, selfHeal: true }
+        syncOptions: ["CreateNamespace=true"]

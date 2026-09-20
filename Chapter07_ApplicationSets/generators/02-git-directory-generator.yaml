@@ -1,0 +1,35 @@
+# Generator 2 (MORE #1): GIT — directory
+# ArgoCD scans the repo and creates ONE Application per matching sub-directory.
+# "check repo and try": add a new folder under apps/ and push → a new app appears
+# automatically, no edit here. This is the self-service pattern.
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: web-git-dir
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
+        revision: main
+        directories:
+          - path: Chapter07_ApplicationSets/apps/*   # matches dev, qa, prod (and any new folder)
+          # - path: Chapter07_ApplicationSets/apps/experimental   # exclude example:
+          #   exclude: true
+  template:
+    metadata:
+      name: 'web-{{.path.basename}}'   # folder name → app name (web-dev, web-qa, …)
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
+        targetRevision: main
+        path: '{{.path.path}}'         # the discovered folder path
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{.path.basename}}'
+      syncPolicy:
+        automated: { prune: true, selfHeal: true }
+        syncOptions: ["CreateNamespace=true"]

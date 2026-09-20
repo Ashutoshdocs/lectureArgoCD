@@ -1,0 +1,32 @@
+# Generator 1 (baseline): LIST
+# You hand-write the elements. Each element becomes one Application.
+# Great when the set is small and fixed (a known list of envs/regions).
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: web-list
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - list:
+        elements:
+          - env: dev
+          - env: qa
+          - env: prod
+  template:
+    metadata:
+      name: 'web-{{.env}}'          # → web-dev, web-qa, web-prod
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
+        targetRevision: main
+        path: 'Chapter07_ApplicationSets/apps/{{.env}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{.env}}'       # dev / qa / prod namespaces
+      syncPolicy:
+        automated: { prune: true, selfHeal: true }
+        syncOptions: ["CreateNamespace=true"]
