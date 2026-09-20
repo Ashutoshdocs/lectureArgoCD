@@ -100,7 +100,7 @@ This is the main event — deploying via the UI.
 3. Fill in the **SOURCE** section:
    - **Repository URL:** `https://github.com/<your-user>/nginx-argocd-demo.git`
    - **Revision:** `HEAD`
-   - **Path:** `manifests`
+   - **Path:** `Chapter02_UI_Based_deployment/manifests`
 4. Fill in the **DESTINATION** section:
    - **Cluster URL:** `https://kubernetes.default.svc` (the in-cluster option)
    - **Namespace:** `nginx-demo`
