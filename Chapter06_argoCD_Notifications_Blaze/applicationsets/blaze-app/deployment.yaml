@@ -1,0 +1,57 @@
+# blaze-app Deployment — the workload ArgoCD syncs.
+# Uses the stock nginx image (no build needed) reconfigured to listen on :3000
+# and serving a custom page from a ConfigMap.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blaze-app
+  namespace: default
+  labels:
+    app: blaze-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: blaze-app
+  template:
+    metadata:
+      labels:
+        app: blaze-app
+    spec:
+      containers:
+        - name: blaze-app
+          # 👇 To DEMO a failure (Degraded), change this tag to a non-existent one
+          #    like nginx:v1 in Git, commit & push → ImagePullBackOff → Degraded email.
+          image: nginx:1.27-alpine
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+          volumeMounts:
+            - name: content
+              mountPath: /usr/share/nginx/html/index.html
+              subPath: index.html
+            - name: content
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: default.conf
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 15
+      volumes:
+        - name: content
+          configMap:
+            name: blaze-app-content
