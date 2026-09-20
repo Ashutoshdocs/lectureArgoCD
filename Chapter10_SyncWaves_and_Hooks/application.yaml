@@ -1,0 +1,22 @@
+# Single Application. ArgoCD reads the sync-wave annotations to ORDER resources
+# and the hook annotations to run Jobs at the right phase.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sync-waves-demo
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
+    targetRevision: main
+    path: Chapter10_SyncWaves_and_Hooks/manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: waves-demo
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

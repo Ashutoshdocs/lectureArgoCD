@@ -1,0 +1,27 @@
+# PreSync HOOK: runs BEFORE any wave of the app is synced.
+# Classic use: run a database migration / schema change before the new code rolls.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-migrate
+  namespace: waves-demo
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    # Clean up the Job object once it succeeds (keeps the app tidy).
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      name: db-migrate
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migrate
+          image: busybox:1.36
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "[PreSync] 🔧 Running DB migration...";
+              sleep 10;
+              echo "[PreSync] ✅ Migration complete. App may now sync.";

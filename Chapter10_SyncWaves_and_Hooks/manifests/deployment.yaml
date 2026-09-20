@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  namespace: waves-demo
+  labels: { app: web }
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"     # WAVE 1: after the ConfigMap exists
+spec:
+  replicas: 2
+  selector: { matchLabels: { app: web } }
+  template:
+    metadata: { labels: { app: web } }
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.27-alpine
+          ports: [{ containerPort: 80 }]
+          resources: { requests: { cpu: 25m, memory: 32Mi }, limits: { cpu: 100m, memory: 64Mi } }
+          volumeMounts:
+            - { name: content, mountPath: /usr/share/nginx/html/index.html, subPath: index.html }
+          readinessProbe: { httpGet: { path: /, port: 80 }, initialDelaySeconds: 3, periodSeconds: 10 }
+      volumes:
+        - name: content
+          configMap: { name: web-content }
