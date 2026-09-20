@@ -1,0 +1,26 @@
+# Optional: declarative "App of Apps" style Application manifest.
+# The README shows how to create this same Application through the ArgoCD UI.
+# Use this file only if you prefer `kubectl apply` over the UI.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-demo
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    # 👇 CHANGE THIS to your own Git repo URL after you push these files.
+    repoURL: https://github.com/CHANGE_ME/nginx-argocd-demo.git
+    targetRevision: HEAD
+    path: manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nginx-demo
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
