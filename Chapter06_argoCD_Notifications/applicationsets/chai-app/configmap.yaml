@@ -29,7 +29,7 @@ data:
     </head>
     <body>
       <div class="card">
-        <h1>☕ Chai App</h1>
+        <h1>☕ Blaze  App</h1>
         <p>Deployed with ArgoCD — GitOps in action.</p>
         <p>Sync &amp; health events are emailed via SMTP notifications.</p>
         <span class="badge">running on :3000</span>
