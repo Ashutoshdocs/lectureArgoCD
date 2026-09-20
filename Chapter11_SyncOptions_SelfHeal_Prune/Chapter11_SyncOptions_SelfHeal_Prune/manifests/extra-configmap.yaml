@@ -1,0 +1,16 @@
+# A throwaway resource used to DEMO PRUNE.
+# Delete this file from Git and push:
+#   - with automated prune ON  → ArgoCD deletes this ConfigMap from the cluster.
+#   - to PROTECT it from pruning, add the annotation shown below, then it survives
+#     even after you remove it from Git (it becomes an orphan you clean up by hand).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prune-me
+  namespace: sync-demo
+  labels: { app: web, demo: prune }
+  # Uncomment to protect this resource from being pruned:
+  # annotations:
+  #   argocd.argoproj.io/sync-options: Prune=false
+data:
+  note: "Delete this file from Git to watch ArgoCD prune me."

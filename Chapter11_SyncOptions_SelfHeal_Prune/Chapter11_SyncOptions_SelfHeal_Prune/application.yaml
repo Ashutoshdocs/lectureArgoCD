@@ -1,0 +1,54 @@
+# The Application whose sync behaviour we're exploring.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sync-demo
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
+    targetRevision: main
+    path: Chapter11_SyncOptions_SelfHeal_Prune/manifests
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: sync-demo
+
+  syncPolicy:
+    # --- Automated sync knobs ---
+    automated:
+      prune: true        # delete cluster resources removed from Git
+      selfHeal: true     # revert manual cluster edits back to Git
+      allowEmpty: false  # refuse to sync an app down to ZERO resources (safety)
+
+    # --- Sync options (behaviour flags) ---
+    syncOptions:
+      - CreateNamespace=true      # create destination namespace if missing
+      - PruneLast=true            # prune deletions AFTER other resources apply
+      - ApplyOutOfSyncOnly=true   # only apply resources that actually differ
+      - RespectIgnoreDifferences=true  # don't reintroduce ignored-diff fields on sync
+      # Other useful ones (uncomment to try):
+      # - ServerSideApply=true          # use k8s server-side apply (big CRDs, field mgrs)
+      # - Replace=true                  # kubectl replace instead of apply (last resort)
+      # - Validate=false                # skip client-side schema validation
+      # - PrunePropagationPolicy=foreground
+
+    # --- Retry a failing sync with backoff ---
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  # --- Ignore drift on specific fields (pairs with self-heal) ---
+  # Uncomment to STOP ArgoCD from reverting replica changes (e.g. when an HPA
+  # owns the replica count). With this on, manual/HPA scaling is NOT self-healed.
+  # ignoreDifferences:
+  #   - group: apps
+  #     kind: Deployment
+  #     name: web
+  #     namespace: sync-demo
+  #     jsonPointers:
+  #       - /spec/replicas
