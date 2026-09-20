@@ -1,0 +1,2 @@
+# Never commit the filled-in notifications secret
+notifications/argocd-notifications-secret.yaml

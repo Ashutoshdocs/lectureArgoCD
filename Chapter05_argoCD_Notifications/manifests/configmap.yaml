@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-index-html
+  namespace: notify-demo
+  labels:
+    app: web
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <title>ArgoCD Notifications Demo</title>
+      <style>
+        body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+             font-family:system-ui,sans-serif;background:#0b1120;color:#e2e8f0}
+        .card{padding:3rem 3.5rem;border-radius:20px;background:rgba(255,255,255,.04);
+              border:1px solid rgba(255,255,255,.08);text-align:center}
+        .badge{display:inline-block;margin-top:1rem;padding:.4rem 1rem;border-radius:999px;
+               background:#10b981;color:#052e1a;font-weight:600}
+      </style>
+    </head>
+    <body>
+      <div class="card">
+        <h1>🔔 ArgoCD Notifications</h1>
+        <p>Sync &amp; health events are pushed to Slack and email.</p>
+        <span class="badge">v1</span>
+      </div>
+    </body>
+    </html>

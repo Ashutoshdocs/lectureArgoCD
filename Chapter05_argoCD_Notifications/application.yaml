@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: web
+  namespace: argocd
+  annotations:
+    # ---- Notification subscriptions ----
+    # Slack: send sync-succeeded, sync-failed and health-degraded to a channel.
+    # Replace "argocd-demo" with your Slack channel name (bot must be invited).
+    notifications.argoproj.io/subscribe.on-sync-succeeded.slack: argocd-demo
+    notifications.argoproj.io/subscribe.on-sync-failed.slack: argocd-demo
+    notifications.argoproj.io/subscribe.on-health-degraded.slack: argocd-demo
+
+    # Email (via the gmail service defined in the ConfigMap): send failures.
+    # Replace with the recipient address.
+    notifications.argoproj.io/subscribe.on-sync-failed.gmail: team@example.com
+    notifications.argoproj.io/subscribe.on-health-degraded.gmail: team@example.com
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
+    targetRevision: main
+    path: Chapter05_argoCD_Notifications/manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: notify-demo
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
