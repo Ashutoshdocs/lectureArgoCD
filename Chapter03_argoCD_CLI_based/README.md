@@ -112,7 +112,7 @@ argocd repo add https://github.com/Ashutoshdocs/lectureArgoCD.git \
 This is the core step — creating the app from the command line:
 
 ```bash
-argocd app create nginx-demo \
+argocd app create cli_nginx-demo \
   --repo https://github.com/Ashutoshdocs/lectureArgoCD.git \
   --path Chapter03_argoCD_CLI_based/manifests \
   --revision HEAD \
@@ -154,10 +154,10 @@ kubectl get all -n nginx-demo
 ## 8. View the nginx page
 
 ```bash
-kubectl port-forward svc/nginx-demo -n nginx-demo 8081:80
+use nodeport service
 ```
 
-Open **http://localhost:8081** — the custom "🚀 Deployed with ArgoCD CLI" page.
+Open **http://localhost:nodeportip** — the custom "🚀 Deployed with ArgoCD CLI" page.
 
 ---
 
