@@ -3,4 +3,4 @@ kind: Namespace
 metadata:
   name: notify-demo
   labels:
-    app.kubernetes.io/part-of: argocd-notifications-demo
+    app.kubernetes.io/part-of: argocd-notifications-email-demo

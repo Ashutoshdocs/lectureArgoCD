@@ -11,7 +11,7 @@ data:
     <html lang="en">
     <head>
       <meta charset="UTF-8" />
-      <title>ArgoCD Notifications Demo</title>
+      <title>ArgoCD Email Notifications Demo</title>
       <style>
         body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
              font-family:system-ui,sans-serif;background:#0b1120;color:#e2e8f0}
@@ -23,8 +23,8 @@ data:
     </head>
     <body>
       <div class="card">
-        <h1>🔔 ArgoCD Notifications</h1>
-        <p>Sync &amp; health events are pushed to Slack and email.</p>
+        <h1>📧 ArgoCD Email Notifications</h1>
+        <p>Sync &amp; health events are emailed via SMTP.</p>
         <span class="badge">v1</span>
       </div>
     </body>
