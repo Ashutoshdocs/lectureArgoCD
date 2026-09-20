@@ -1,0 +1,16 @@
+# Kustomize is what lets ArgoCD Image Updater write the new tag back to Git.
+# Image Updater runs `kustomize edit set image` and commits the change here,
+# updating the `newTag` field below. ArgoCD then syncs the new tag.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: frontend-demo
+
+resources:
+  - namespace.yaml
+  - deployment.yaml
+  - service.yaml
+
+images:
+  - name: myacrdemo.azurecr.io/frontend
+    newTag: "1.0.0"

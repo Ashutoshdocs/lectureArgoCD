@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: frontend
+  namespace: argocd
+  annotations:
+    # ---- ArgoCD Image Updater configuration ----
+    # 1) Which image(s) to watch. Alias "frontend" -> the ACR repository.
+    argocd-image-updater.argoproj.io/image-list: frontend=myacrdemo.azurecr.io/frontend
+
+    # 2) Update strategy: pick the highest SemVer tag.
+    argocd-image-updater.argoproj.io/frontend.update-strategy: semver
+
+    # 3) Only consider proper semver tags like 1.0.0, 1.2.3 (ignore "latest", "dev").
+    argocd-image-updater.argoproj.io/frontend.allow-tags: regexp:^[0-9]+\.[0-9]+\.[0-9]+$
+
+    # 4) Tie this alias to the kustomize image name so write-back edits kustomization.yaml.
+    argocd-image-updater.argoproj.io/frontend.kustomize.image-name: myacrdemo.azurecr.io/frontend
+
+    # 5) Credentials to read tags from the private ACR (Kubernetes pull secret).
+    argocd-image-updater.argoproj.io/frontend.pull-secret: pullsecret:frontend-demo/acr-secret
+
+    # 6) Write the new tag back to Git (a commit on the repo below), so Git stays
+    #    the source of truth. Uses the git-creds secret in the argocd namespace.
+    argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/git-creds
+    argocd-image-updater.argoproj.io/git-branch: main
+    argocd-image-updater.argoproj.io/write-back-target: kustomization
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
+    targetRevision: main
+    path: Chapter04_argoCD_Image_Updater/manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: frontend-demo
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

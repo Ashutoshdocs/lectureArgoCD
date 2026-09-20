@@ -1,0 +1,12 @@
+{
+  "name": "argocd-frontend-demo",
+  "version": "1.0.0",
+  "description": "Tiny frontend used to demo ArgoCD Image Updater",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

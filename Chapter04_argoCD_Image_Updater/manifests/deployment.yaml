@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: frontend-demo
+  labels:
+    app: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      # Pull secret for the private Azure Container Registry.
+      # Create it with: kubectl -n frontend-demo create secret docker-registry acr-secret ...
+      imagePullSecrets:
+        - name: acr-secret
+      containers:
+        - name: frontend
+          # This tag is managed by ArgoCD Image Updater via kustomization.yaml.
+          image: myacrdemo.azurecr.io/frontend:1.0.0
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: 25m
+              memory: 48Mi
+            limits:
+              cpu: 150m
+              memory: 128Mi
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 15
