@@ -77,7 +77,9 @@ git push origin main
 Port-forward the API server (leave this running in one terminal):
 
 ```bash
-kubectl port-forward svc/argocd-server -n argocd 8080:443
+kubectl get svc -n argocd argocd-server
+kubectl patch svc argocd-server -n argocd -p '{"spec":{"type":"NodePort"}}'
+kubectl get svc -n argocd argocd-server
 ```
 
 Get the admin password and log in (new terminal):
