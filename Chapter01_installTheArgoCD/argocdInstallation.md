@@ -131,10 +131,12 @@ kubectl get svc -n argocd
 Port-forward the service:
 
 ```bash
-kubectl port-forward svc/argocd-server -n argocd 8080:443 --address=0.0.0.0 &
+kubectl get svc -n argocd argocd-server
+kubectl patch svc argocd-server -n argocd -p '{"spec":{"type":"NodePort"}}'
+kubectl get svc -n argocd argocd-server
 ```
 
-Now open → **[https://<instance_public_ip>:8080](https://<instance_public_ip>:8080)**
+Now open → **[https://<instance_public_ip>:nodeportIp](https://<instance_public_ip>:8080)**
 
 ### 6. Get initial admin password
 
