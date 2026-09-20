@@ -1,0 +1,46 @@
+# Pull Request generator: one Application per OPEN pull request.
+# Open a PR  → a preview app is created (from that PR's branch/commit).
+# Close/merge → ArgoCD deletes the preview app automatically.
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: web-pr-preview
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - pullRequest:
+        github:
+          owner: Ashutoshdocs
+          repo: lectureArgoCD
+          # Token used to list PRs. Public repo works without one, but a token
+          # avoids GitHub rate limits (and is required for private repos).
+          tokenRef:
+            secretName: github-token
+            key: token
+          # Only build previews for PRs carrying this label (recommended so not
+          # every PR spins up an env). Remove to preview ALL open PRs.
+          labels:
+            - preview
+        # How often to re-check GitHub for PR changes (or wire a webhook for instant).
+        requeueAfterSeconds: 60
+  template:
+    metadata:
+      name: 'web-pr-{{.number}}'          # e.g. web-pr-42
+      labels:
+        preview: "true"
+        pr: '{{.number}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
+        targetRevision: '{{.head_sha}}'   # deploy the PR's exact commit
+        path: Chapter08_ApplicationSet_PullRequest/preview-app
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: 'preview-pr-{{.number}}'   # isolated namespace per PR
+      syncPolicy:
+        automated: { prune: true, selfHeal: true }
+        syncOptions:
+          - CreateNamespace=true
