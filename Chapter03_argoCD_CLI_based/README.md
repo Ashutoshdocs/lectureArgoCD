@@ -117,7 +117,7 @@ argocd app create nginx-demo \
   --path Chapter03_argoCD_CLI_based/manifests \
   --revision HEAD \
   --dest-server https://kubernetes.default.svc \
-  --dest-namespace nginx-demo \
+  --dest-namespace cli_nginx-demo \
   --sync-option CreateNamespace=true \
   --sync-policy automated \
   --auto-prune \
