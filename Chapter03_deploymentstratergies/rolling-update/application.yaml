@@ -12,7 +12,7 @@ spec:
     repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
     targetRevision: main
     # Path to the manifests folder inside your repo. Adjust if you nested it.
-    path: deploymentstratergies/rolling-update/manifests
+    path: Chapter03_deploymentstratergies/rolling-update/manifests
   destination:
     server: https://kubernetes.default.svc
     namespace: rolling-update
