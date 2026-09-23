@@ -1,0 +1,67 @@
+#!/bin/bash
+
+set -e
+
+echo "======================================"
+echo " Installing kubectl and Helm"
+echo "======================================"
+
+# Update packages
+sudo apt-get update
+
+# Required packages
+sudo apt-get install -y curl wget apt-transport-https ca-certificates gnupg
+
+# ==========================================================
+# Install kubectl
+# ==========================================================
+
+echo ""
+echo "Installing kubectl..."
+
+sudo install -m 0755 -d /etc/apt/keyrings
+
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.34/deb/Release.key \
+  | sudo gpg --dearmor --yes -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.34/deb/ /' \
+  | sudo tee /etc/apt/sources.list.d/kubernetes.list > /dev/null
+
+sudo apt-get update
+
+sudo apt-get install -y kubectl
+
+# ==========================================================
+# Install Helm
+# ==========================================================
+
+echo ""
+echo "Installing Helm..."
+
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \
+  | bash
+
+curl -fsSL 'https://azurecliprod.blob.core.windows.net/$root/deb_install.sh' | sudo bash
+
+
+# ==========================================================
+# Verify
+# ==========================================================
+
+echo ""
+echo "======================================"
+echo " Installation completed"
+echo "======================================"
+
+echo ""
+echo "kubectl version:"
+kubectl version --client
+
+echo ""
+echo "Helm version:"
+helm version
+
+echo ""
+echo "======================================"
+echo " kubectl and Helm are ready!"
+echo "======================================"
