@@ -11,7 +11,7 @@ metadata:
     app: canary-demo
     track: stable
 spec:
-  replicas: 4
+  replicas: 1
   selector:
     matchLabels:
       app: canary-demo
