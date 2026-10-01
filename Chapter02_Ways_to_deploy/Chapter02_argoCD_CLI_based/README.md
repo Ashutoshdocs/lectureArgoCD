@@ -114,7 +114,7 @@ This is the core step — creating the app from the command line:
 ```bash
 argocd app create cli_nginx-demo \
   --repo https://github.com/Ashutoshdocs/lectureArgoCD.git \
-  --path Chapter03_argoCD_CLI_based/manifests \
+  --path Chapter02_Ways_to_deploy/Chapter02_argoCD_CLI_based \
   --revision HEAD \
   --dest-server https://kubernetes.default.svc \
   --dest-namespace cli_nginx-demo \
