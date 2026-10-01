@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-demo
+  name: CLI_nginx-demo
   namespace: nginx-demo
   labels:
     app: nginx-demo
