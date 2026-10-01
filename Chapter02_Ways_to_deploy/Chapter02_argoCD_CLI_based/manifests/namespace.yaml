@@ -1,6 +1,8 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: nginx-demo
+  name: cli-nginx-demo
   labels:
-    app.kubernetes.io/part-of: nginx-argocd-demo
+    app.kubernetes.io/part-of: cli-nginx-argocd-demo
+    app: cli-nginx-demo
+
