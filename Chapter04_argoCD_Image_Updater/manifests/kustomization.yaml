@@ -13,4 +13,4 @@ resources:
 
 images:
   - name: blazetestblake.azurecr.io/frontend
-    newTag: "1.0.0"
+    newTag: "1.0.1"
