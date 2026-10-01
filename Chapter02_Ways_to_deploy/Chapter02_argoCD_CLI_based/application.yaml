@@ -12,8 +12,8 @@ spec:
   source:
     repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
     targetRevision: HEAD
-    path: Chapter03_argoCD_CLI_based/manifests
-  destination:
+    path: 
+  destination: Chapter02_Ways_to_deploy/Chapter02_argoCD_CLI_based/manifests
     server: https://kubernetes.default.svc
     namespace: nginx-demo
   syncPolicy:
