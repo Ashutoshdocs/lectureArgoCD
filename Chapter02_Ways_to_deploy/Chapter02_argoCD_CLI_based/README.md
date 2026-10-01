@@ -112,12 +112,12 @@ argocd repo add https://github.com/Ashutoshdocs/lectureArgoCD.git \
 This is the core step — creating the app from the command line:
 
 ```bash
-argocd app create cli_nginx-demo \
+argocd app create cli-nginx-demo \
   --repo https://github.com/Ashutoshdocs/lectureArgoCD.git \
   --path Chapter02_Ways_to_deploy/Chapter02_argoCD_CLI_based \
   --revision HEAD \
   --dest-server https://kubernetes.default.svc \
-  --dest-namespace cli_nginx-demo \
+  --dest-namespace cli-nginx-demo \
   --sync-option CreateNamespace=true \
   --sync-policy automated \
   --auto-prune \
