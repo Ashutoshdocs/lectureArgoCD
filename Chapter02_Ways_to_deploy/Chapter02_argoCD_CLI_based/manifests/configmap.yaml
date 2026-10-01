@@ -1,10 +1,11 @@
+```yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: nginx-index-html
-  namespace: nginx-demo
+  name: cli-nginx-index-html
+  namespace: cli-nginx-demo
   labels:
-    app: nginx-demo
+    app: cli-nginx-demo
 data:
   index.html: |
     <!DOCTYPE html>
@@ -12,9 +13,12 @@ data:
     <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Nginx on ArgoCD (CLI)</title>
+      <title>Nginx on Argo CD - CLI</title>
       <style>
-        :root { color-scheme: light dark; }
+        :root {
+          color-scheme: light dark;
+        }
+
         body {
           margin: 0;
           min-height: 100vh;
@@ -25,6 +29,7 @@ data:
           background: linear-gradient(135deg, #0b1120 0%, #1e293b 100%);
           color: #e2e8f0;
         }
+
         .card {
           text-align: center;
           padding: 3rem 3.5rem;
@@ -33,8 +38,17 @@ data:
           border: 1px solid rgba(255, 255, 255, 0.08);
           box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
         }
-        h1 { margin: 0 0 0.5rem; font-size: 2rem; }
-        p { margin: 0.25rem 0; color: #94a3b8; }
+
+        h1 {
+          margin: 0 0 0.5rem;
+          font-size: 2rem;
+        }
+
+        p {
+          margin: 0.25rem 0;
+          color: #94a3b8;
+        }
+
         .badge {
           display: inline-block;
           margin-top: 1.25rem;
@@ -45,15 +59,42 @@ data:
           font-weight: 600;
           font-size: 0.85rem;
         }
-        code { color: #7dd3fc; }
+
+        code {
+          color: #7dd3fc;
+        }
       </style>
     </head>
+
     <body>
       <div class="card">
-        <h1>🚀 Deployed with ArgoCD CLI</h1>
-        <p>This nginx page is served from a Kubernetes ConfigMap.</p>
-        <p>Created via <code>argocd app create</code> &amp; <code>argocd app sync</code>.</p>
-        <span class="badge">Sync Status: Healthy</span>
+        <h1>🚀 Deployed with Argo CD CLI</h1>
+
+        <p>
+          This Nginx page is served from a Kubernetes ConfigMap.
+        </p>
+
+        <p>
+          Application:
+          <code>cli-nginx-demo</code>
+        </p>
+
+        <p>
+          Namespace:
+          <code>cli-nginx-demo</code>
+        </p>
+
+        <p>
+          Deployment method:
+          <code>argocd app create</code>
+          +
+          <code>argocd app sync</code>
+        </p>
+
+        <span class="badge">
+          Sync Status: Healthy
+        </span>
       </div>
     </body>
     </html>
+```
