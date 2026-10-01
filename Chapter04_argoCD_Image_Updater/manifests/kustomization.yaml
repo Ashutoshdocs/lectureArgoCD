@@ -12,5 +12,5 @@ resources:
   - service.yaml
 
 images:
-  - name: myacrdemo.azurecr.io/frontend
+  - name: blazetestblake.azurecr.io/frontend
     newTag: "1.0.0"
