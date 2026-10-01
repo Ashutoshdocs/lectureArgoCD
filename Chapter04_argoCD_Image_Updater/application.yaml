@@ -6,7 +6,7 @@ metadata:
   annotations:
     # ---- ArgoCD Image Updater configuration ----
     # 1) Which image(s) to watch. Alias "frontend" -> the ACR repository.
-    argocd-image-updater.argoproj.io/image-list: frontend=myacrdemo.azurecr.io/frontend
+    argocd-image-updater.argoproj.io/image-list: frontend=blazetestblake.azurecr.io/frontend
 
     # 2) Update strategy: pick the highest SemVer tag.
     argocd-image-updater.argoproj.io/frontend.update-strategy: semver
@@ -15,7 +15,7 @@ metadata:
     argocd-image-updater.argoproj.io/frontend.allow-tags: regexp:^[0-9]+\.[0-9]+\.[0-9]+$
 
     # 4) Tie this alias to the kustomize image name so write-back edits kustomization.yaml.
-    argocd-image-updater.argoproj.io/frontend.kustomize.image-name: myacrdemo.azurecr.io/frontend
+    argocd-image-updater.argoproj.io/frontend.kustomize.image-name: blazetestblake.azurecr.io/frontend
 
     # 5) Credentials to read tags from the private ACR (Kubernetes pull secret).
     argocd-image-updater.argoproj.io/frontend.pull-secret: pullsecret:frontend-demo/acr-secret
