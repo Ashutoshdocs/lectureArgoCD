@@ -12,7 +12,7 @@ spec:
   source:
     repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
     targetRevision: HEAD
-    path: Chapter02_Ways_to_deploy/Chapter02_argoCD_CLI_based
+    path: Chapter02_Ways_to_deploy/Chapter02_argoCD_CLI_based/manifests
 
   destination:
     server: https://kubernetes.default.svc
