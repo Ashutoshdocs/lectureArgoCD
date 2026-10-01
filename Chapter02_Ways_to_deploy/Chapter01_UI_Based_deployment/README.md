@@ -129,7 +129,8 @@ This is the main event — deploying via the UI.
 Port-forward the app's Service and open it:
 
 ```bash
-kubectl port-forward svc/nginx-demo -n nginx-demo 8081:80
+kubectl patch svc nginx-demo -n nginx-demo \
+  -p '{"spec":{"type":"NodePort"}}'
 ```
 
 Open **http://localhost:8081** — you'll see the custom
