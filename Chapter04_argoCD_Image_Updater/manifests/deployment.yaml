@@ -22,7 +22,7 @@ spec:
       containers:
         - name: frontend
           # This tag is managed by ArgoCD Image Updater via kustomization.yaml.
-          image: myacrdemo.azurecr.io/frontend:1.0.0
+          image: blazetestblake.azurecr.io/frontend:1.0.0
           ports:
             - containerPort: 3000
           resources:
