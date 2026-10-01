@@ -49,7 +49,7 @@ data:
     </head>
     <body>
       <div class="card">
-        <h1>🚀 Deployed with ArgoCD</h1>
+        <h1>🚀 Deployed with ArgoCD AUTOSYNC</h1>
         <p>This nginx page is served from a Kubernetes ConfigMap.</p>
         <p>GitOps: what's in Git is what's running.</p>
         <span class="badge">Sync Status: Healthy</span>
