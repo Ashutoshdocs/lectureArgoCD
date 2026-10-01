@@ -100,9 +100,9 @@ This is the main event — deploying via the UI.
    - Tick ✅ **Prune Resources** and ✅ **Self Heal**
    - Tick ✅ **Auto-Create Namespace** (creates `nginx-demo` for you)
 3. Fill in the **SOURCE** section:
-   - **Repository URL:** `https://github.com/<your-user>/nginx-argocd-demo.git`
+   - **Repository URL:** `https://github.com/Ashutoshdocs/lectureArgoCD`
    - **Revision:** `HEAD`
-   - **Path:** `Chapter02_UI_Based_deployment/manifests`
+   - **Path:** `Chapter02_Ways_to_deploy/Chapter01_UI_Based_deployment/manifests`
 4. Fill in the **DESTINATION** section:
    - **Cluster URL:** `https://kubernetes.default.svc` (the in-cluster option)
    - **Namespace:** `nginx-demo`
