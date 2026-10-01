@@ -111,8 +111,7 @@ kubectl wait --for=condition=available --timeout=300s deployment/argocd-server -
 ## 4. Install ArgoCD Image Updater
 
 ```bash
-kubectl apply -n argocd -f \
-  https://raw.githubusercontent.com/argoproj-labs/argocd-image-updater/stable/manifests/install.yaml
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj-labs/argocd-image-updater/v1.3.0/config/install.yaml
 kubectl -n argocd rollout status deployment/argocd-image-updater
 ```
 
