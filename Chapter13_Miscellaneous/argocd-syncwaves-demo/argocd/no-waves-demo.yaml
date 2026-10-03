@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/Ashutoshdocs/argocd-syncwaves-demo.git
     targetRevision: HEAD
-    path: no-waves
+    path: Chapter13_Miscellaneous/argocd-syncwaves-demo/no-waves
   destination:
     server: https://kubernetes.default.svc
     namespace: no-waves-demo
