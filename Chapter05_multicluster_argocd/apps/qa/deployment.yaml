@@ -7,7 +7,7 @@ metadata:
     app: web
     env: qa
 spec:
-  replicas: 2
+  replicas: 10
   selector:
     matchLabels:
       app: web
