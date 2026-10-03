@@ -13,7 +13,7 @@ spec:
     targetRevision: main
     path: Chapter05_multicluster_argocd/apps/prod
   destination:
-    server: https://<PROD_CLUSTER_API_SERVER>:6443   # <-- from `argocd cluster list`
+    server: https://10.0.1.6:6443   # <-- from `argocd cluster list`
     namespace: default
   syncPolicy:
     automated:
