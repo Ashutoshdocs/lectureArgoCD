@@ -10,9 +10,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/<your-user>/argocd-hooks-demo.git
+    repoURL: https://github.com/Ashutoshdocs/argocd-hooks-demo.git
     targetRevision: HEAD
-    path: manifests
+    path: Chapter13_Miscellaneous/argocd-hooks-demo/argocd/manifests
     directory:
       recurse: true        # pick up manifests/app and manifests/hooks
   destination:
