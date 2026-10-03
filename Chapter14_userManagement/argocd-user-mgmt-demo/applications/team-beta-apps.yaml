@@ -12,9 +12,9 @@ metadata:
 spec:
   project: team-beta
   source:
-    repoURL: https://github.com/YOUR-GITHUB-USER/argocd-user-mgmt-demo.git
+    repoURL: https://github.com/Ashutoshdocs/argocd-user-mgmt-demo.git
     targetRevision: main
-    path: manifests/team-beta/httpd
+    path: Chapter14_userManagement/argocd-user-mgmt-demo/manifests/team-beta/httpd
   destination:
     server: https://kubernetes.default.svc
     namespace: team-beta
