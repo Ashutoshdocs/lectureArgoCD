@@ -117,9 +117,18 @@ grep server: dev.yaml qa.yaml prod.yaml
 #   If any shows an IP the dev VM can't reach, edit it to a reachable one.
 
 # kubeadm names every context the same → rename each to a unique name:
-KUBECONFIG=dev.yaml  kubectl config rename-context kubernetes-admin@kubernetes dev
-KUBECONFIG=qa.yaml   kubectl config rename-context kubernetes-admin@kubernetes qa
-KUBECONFIG=prod.yaml kubectl config rename-context kubernetes-admin@kubernetes prod
+sed -i 's/name: kubernetes$/name: dev-cluster/' dev.yaml
+sed -i 's/cluster: kubernetes/cluster: dev-cluster/' dev.yaml
+sed -i 's/name: kubernetes-admin$/name: dev-admin/' dev.yaml
+sed -i 's/user: kubernetes-admin/user: dev-admin/' dev.yaml
+sed -i 's/name: kubernetes$/name: qa-cluster/' qa.yaml
+sed -i 's/cluster: kubernetes/cluster: qa-cluster/' qa.yaml
+sed -i 's/name: kubernetes-admin$/name: qa-admin/' qa.yaml
+sed -i 's/user: kubernetes-admin/user: qa-admin/' qa.yaml
+sed -i 's/name: kubernetes$/name: prod-cluster/' prod.yaml
+sed -i 's/cluster: kubernetes/cluster: prod-cluster/' prod.yaml
+sed -i 's/name: kubernetes-admin$/name: prod-admin/' prod.yaml
+sed -i 's/user: kubernetes-admin/user: prod-admin/' prod.yaml
 
 # Merge into one kubeconfig:
 KUBECONFIG=dev.yaml:qa.yaml:prod.yaml kubectl config view --flatten > ~/.kube/config
