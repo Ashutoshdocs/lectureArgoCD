@@ -6,9 +6,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/<your-user>/argocd-autosync-demo.git
+    repoURL: https://github.com/Ashutoshdocs/argocd-autosync-demo.git
     targetRevision: HEAD
-    path: manifests
+    path: Chapter13_Miscellaneous/argocd-autosync-demo/argocd/manifests
   destination:
     server: https://kubernetes.default.svc
     namespace: gitops-demo
