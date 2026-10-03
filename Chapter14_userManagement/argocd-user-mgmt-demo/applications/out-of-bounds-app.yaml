@@ -12,9 +12,9 @@ metadata:
 spec:
   project: team-alpha
   source:
-    repoURL: https://github.com/YOUR-GITHUB-USER/argocd-user-mgmt-demo.git
+    repoURL: https://github.com/Ashutoshdocs/argocd-user-mgmt-demo.git
     targetRevision: main
-    path: manifests/team-alpha/nginx
+    path: Chapter14_userManagement/argocd-user-mgmt-demo/manifests/team-alpha/nginx
   destination:
     server: https://kubernetes.default.svc
     namespace: default
