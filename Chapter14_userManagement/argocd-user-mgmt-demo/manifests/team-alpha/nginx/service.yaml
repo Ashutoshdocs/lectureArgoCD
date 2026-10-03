@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: alpha-nginx
+  labels:
+    app: alpha-nginx
+    team: alpha
+spec:
+  type: ClusterIP
+  selector:
+    app: alpha-nginx
+  ports:
+    - port: 80
+      targetPort: 80

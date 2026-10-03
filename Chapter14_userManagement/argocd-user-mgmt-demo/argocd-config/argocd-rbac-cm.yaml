@@ -1,0 +1,62 @@
+# -----------------------------------------------------------------------------
+# argocd-rbac-cm : what each user is allowed to do
+#
+# Policy line format:
+#   p, <subject>, <resource>, <action>, <project>/<object>, <allow|deny>
+#   g, <user-or-group>, <role>
+#
+# Resources : applications, applicationsets, projects, repositories, clusters,
+#             certificates, accounts, gpgkeys, logs, exec, extensions
+# Actions   : get, create, update, delete, sync, override, action/<path>, *
+# -----------------------------------------------------------------------------
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-rbac-cm
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-rbac-cm
+    app.kubernetes.io/part-of: argocd
+data:
+  # Users with no matching role get NOTHING (deny by default).
+  # Use "role:readonly" here instead if you want everyone to see everything.
+  policy.default: ""
+
+  policy.csv: |
+    # =====================================================================
+    # ROLE: alpha-developer  (full control of team-alpha apps only)
+    # =====================================================================
+    p, role:alpha-developer, applications, get,      team-alpha/*, allow
+    p, role:alpha-developer, applications, create,   team-alpha/*, allow
+    p, role:alpha-developer, applications, update,   team-alpha/*, allow
+    p, role:alpha-developer, applications, delete,   team-alpha/*, allow
+    p, role:alpha-developer, applications, sync,     team-alpha/*, allow
+    p, role:alpha-developer, applications, override, team-alpha/*, allow
+    p, role:alpha-developer, applications, action/*, team-alpha/*, allow
+    p, role:alpha-developer, logs,         get,      team-alpha/*, allow
+    p, role:alpha-developer, projects,     get,      team-alpha,   allow
+    p, role:alpha-developer, repositories, get,      *,            allow
+    p, role:alpha-developer, clusters,     get,      *,            allow
+
+    # Explicit deny example: alice may NOT delete the "protected" app
+    p, role:alpha-developer, applications, delete, team-alpha/alpha-protected, deny
+
+    # =====================================================================
+    # ROLE: beta-operator  (view + sync team-beta apps, no create/delete)
+    # =====================================================================
+    p, role:beta-operator, applications, get,  team-beta/*, allow
+    p, role:beta-operator, applications, sync, team-beta/*, allow
+    p, role:beta-operator, logs,         get,  team-beta/*, allow
+    p, role:beta-operator, projects,     get,  team-beta,   allow
+
+    # =====================================================================
+    # USER -> ROLE bindings
+    # =====================================================================
+    g, alice, role:alpha-developer
+    g, bob,   role:beta-operator
+
+    # The built-in admin keeps full access
+    g, admin, role:admin
+
+  # Which claims are used to match "g," lines (relevant for SSO groups)
+  scopes: "[groups, email]"

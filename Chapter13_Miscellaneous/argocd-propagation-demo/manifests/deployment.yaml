@@ -1,0 +1,36 @@
+# Owner chain: Deployment -> ReplicaSet -> Pods (linked by ownerReferences).
+# No namespace here: each Argo CD Application sets its own destination namespace.
+# Pods shut down slowly (preStop sleep) so the deletion ORDER is visible.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-web
+  labels:
+    app: demo-web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: demo-web
+  template:
+    metadata:
+      labels:
+        app: demo-web
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: nginx
+          image: nginx:1.27
+          ports:
+            - containerPort: 80
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sh", "-c", "sleep 15"]
+          resources:
+            requests:
+              cpu: 20m
+              memory: 16Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi

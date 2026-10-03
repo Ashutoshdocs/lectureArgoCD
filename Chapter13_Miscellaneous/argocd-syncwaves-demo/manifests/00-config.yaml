@@ -1,0 +1,25 @@
+# WAVE -1: configuration first. Everything later reads it.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+data:
+  GREETING: "Hello from sync waves v1"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-nginx-conf
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+data:
+  default.conf: |
+    server {
+      listen 80;
+      location / {
+        # nginx resolves this name at startup and exits if the backend Service doesn't exist yet
+        proxy_pass http://backend;
+      }
+    }

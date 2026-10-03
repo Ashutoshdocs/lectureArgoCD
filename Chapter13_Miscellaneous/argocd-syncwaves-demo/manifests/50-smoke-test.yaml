@@ -1,0 +1,27 @@
+# WAVE 4: end-to-end test through frontend -> backend -> (value from redis).
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: smoke-test
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: test
+          image: curlimages/curl:8.10.1
+          envFrom:
+            - configMapRef:
+                name: app-config
+          command: ["sh", "-c"]
+          args:
+            - |
+              echo "[wave 4] GET http://frontend"
+              BODY=$(curl -s http://frontend)
+              echo "$BODY"
+              echo "$BODY" | grep -q "$GREETING" && echo "[wave 4] PASS" || { echo "[wave 4] FAIL"; exit 1; }

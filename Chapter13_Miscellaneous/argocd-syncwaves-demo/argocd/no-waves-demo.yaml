@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: no-waves-demo
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/<your-user>/argocd-syncwaves-demo.git
+    targetRevision: HEAD
+    path: no-waves
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: no-waves-demo
+  # Manual sync on purpose, so you choose when each sync starts and can watch it.
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

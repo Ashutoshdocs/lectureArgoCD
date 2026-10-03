@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beta-httpd
+  labels:
+    app: beta-httpd
+    team: beta
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: beta-httpd
+  template:
+    metadata:
+      labels:
+        app: beta-httpd
+        team: beta
+    spec:
+      containers:
+        - name: httpd
+          image: httpd:2.4-alpine
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi

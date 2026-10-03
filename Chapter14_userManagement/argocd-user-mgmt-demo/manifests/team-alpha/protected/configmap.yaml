@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alpha-protected-config
+  labels:
+    team: alpha
+data:
+  message: "This app is protected - alice can sync it but cannot delete it."

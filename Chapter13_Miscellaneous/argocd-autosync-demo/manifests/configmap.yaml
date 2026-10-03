@@ -1,0 +1,8 @@
+# Part 2: delete this file from Git to watch Argo CD prune it from the cluster.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: demo-config
+  namespace: gitops-demo
+data:
+  greeting: "Hello from GitOps"

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-web
+  namespace: gitops-demo
+  labels:
+    app: demo-web
+spec:
+  replicas: 2   # Part 1: change to 4, commit, push
+  selector:
+    matchLabels:
+      app: demo-web
+  template:
+    metadata:
+      labels:
+        app: demo-web
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.27
+          ports:
+            - containerPort: 80
+          env:
+            - name: GREETING
+              valueFrom:
+                configMapKeyRef:
+                  name: demo-config
+                  key: greeting
+                  optional: true   # lets the pod keep running after the ConfigMap is pruned
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi

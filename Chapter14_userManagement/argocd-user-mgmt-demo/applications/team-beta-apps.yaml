@@ -1,0 +1,23 @@
+# -----------------------------------------------------------------------------
+# Team Beta applications (project: team-beta)
+#   beta-httpd -> bob can view + sync, but cannot edit, delete or create apps
+# -----------------------------------------------------------------------------
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: beta-httpd
+  namespace: argocd
+  labels:
+    team: beta
+spec:
+  project: team-beta
+  source:
+    repoURL: https://github.com/YOUR-GITHUB-USER/argocd-user-mgmt-demo.git
+    targetRevision: main
+    path: manifests/team-beta/httpd
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: team-beta
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

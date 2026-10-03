@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alpha-protected
+  labels:
+    app: alpha-protected
+    team: alpha
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alpha-protected
+  template:
+    metadata:
+      labels:
+        app: alpha-protected
+        team: alpha
+    spec:
+      containers:
+        - name: busybox
+          image: busybox:1.36
+          command: ["sh", "-c", "while true; do echo \"$MESSAGE\"; sleep 30; done"]
+          env:
+            - name: MESSAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: alpha-protected-config
+                  key: message
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi

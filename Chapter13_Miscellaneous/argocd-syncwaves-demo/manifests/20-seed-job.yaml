@@ -1,0 +1,30 @@
+# WAVE 1: seed the database. It's a Sync hook so a new Job is created on every
+# sync (a plain Job can't be updated because its pod template is immutable).
+# Argo CD waits until the Job COMPLETES before starting wave 2.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-seed
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: seed
+          image: redis:7-alpine
+          envFrom:
+            - configMapRef:
+                name: app-config
+          command: ["sh", "-c"]
+          args:
+            - |
+              echo "[wave 1] Seeding redis with GREETING=$GREETING"
+              redis-cli -h redis ping || { echo "redis not reachable"; exit 1; }
+              redis-cli -h redis set greeting "$GREETING"
+              sleep 3
+              echo "[wave 1] Seed complete"

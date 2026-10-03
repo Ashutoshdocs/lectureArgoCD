@@ -1,0 +1,8 @@
+# Stays in Git for the whole demo so the app path is never empty
+# (automated sync refuses to sync an empty path unless allowEmpty: true).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: demo-keep
+data:
+  note: "This resource stays in Git for the whole demo"

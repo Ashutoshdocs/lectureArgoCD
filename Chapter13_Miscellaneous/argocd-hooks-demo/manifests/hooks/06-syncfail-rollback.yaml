@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: rollback-syncfail
+  annotations:
+    argocd.argoproj.io/hook: SyncFail
+    argocd.argoproj.io/sync-wave: "0"
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  backoffLimit: 0            # fail fast so the demo doesn't retry for minutes
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: rollback-syncfail
+          image: busybox:1.36
+          command: ["sh", "-c"]
+          args:
+            - |
+              echo "[SyncFail] Sync operation FAILED. Running cleanup / rollback..."
+              sleep 3
+              echo "[SyncFail] Restoring database from latest backup..."
+              echo "[SyncFail] Alert sent to #deployments channel"

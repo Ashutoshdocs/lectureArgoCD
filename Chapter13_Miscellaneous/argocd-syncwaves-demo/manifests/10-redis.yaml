@@ -1,0 +1,39 @@
+# WAVE 0: the database. Argo CD waits until it is Healthy (readiness probe passes).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: redis }
+  template:
+    metadata:
+      labels: { app: redis }
+    spec:
+      containers:
+        - name: redis
+          image: redis:7-alpine
+          ports:
+            - containerPort: 6379
+          readinessProbe:
+            exec:
+              command: ["redis-cli", "ping"]
+            initialDelaySeconds: 5
+            periodSeconds: 3
+          resources:
+            requests: { cpu: 20m, memory: 32Mi }
+            limits:   { cpu: 200m, memory: 128Mi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  selector: { app: redis }
+  ports:
+    - port: 6379

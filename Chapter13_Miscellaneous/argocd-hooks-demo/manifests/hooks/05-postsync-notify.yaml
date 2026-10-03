@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: postsync-notify
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  backoffLimit: 0            # fail fast so the demo doesn't retry for minutes
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: postsync-notify
+          image: busybox:1.36
+          command: ["sh", "-c"]
+          args:
+            - |
+              echo "[PostSync | wave 1] Sending notification: hooks-demo deployed successfully"
+              sleep 3
+              echo "[PostSync | wave 1] (HookSucceeded policy: this Job deletes itself after success)"

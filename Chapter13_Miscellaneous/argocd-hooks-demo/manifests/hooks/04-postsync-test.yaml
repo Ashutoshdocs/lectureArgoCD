@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: postsync-test
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/sync-wave: "0"
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  backoffLimit: 0            # fail fast so the demo doesn't retry for minutes
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: postsync-test
+          image: curlimages/curl:8.10.1
+          command: ["sh", "-c"]
+          args:
+            - |
+              echo "[PostSync | wave 0] Smoke-testing http://demo-web ..."
+              for i in 1 2 3; do
+                code=$(curl -s -o /dev/null -w "%{http_code}" http://demo-web)
+                echo "  request $i -> HTTP $code"
+                [ "$code" = "200" ] || exit 1
+              done
+              echo "[PostSync | wave 0] All tests passed"

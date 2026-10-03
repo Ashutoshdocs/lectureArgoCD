@@ -1,0 +1,12 @@
+# Same app, but every sync-wave annotation is removed, so everything is wave 0.
+# Used in Part 2 to show what waves protect you from.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../manifests
+patches:
+  - target:
+      annotationSelector: argocd.argoproj.io/sync-wave
+    patch: |-
+      - op: remove
+        path: /metadata/annotations/argocd.argoproj.io~1sync-wave

@@ -1,0 +1,30 @@
+# -----------------------------------------------------------------------------
+# argocd-cm : declares the local users (accounts) for Argo CD
+#
+#   alice -> Developer on team-alpha (UI/CLI login + API tokens)
+#   bob   -> Viewer/Operator on team-beta (UI/CLI login only)
+#
+# Capabilities:
+#   login  -> user can log in through the UI / CLI with a password
+#   apiKey -> user can generate API tokens (for CI/CD, scripts)
+# -----------------------------------------------------------------------------
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-cm
+    app.kubernetes.io/part-of: argocd
+data:
+  # ---- User 1: alice ----
+  accounts.alice: apiKey, login
+  accounts.alice.enabled: "true"
+
+  # ---- User 2: bob ----
+  accounts.bob: login
+  accounts.bob.enabled: "true"
+
+  # Optional: disable the built-in admin user once you have other admins.
+  # DO NOT enable this until you have verified another user has admin rights.
+  # admin.enabled: "false"

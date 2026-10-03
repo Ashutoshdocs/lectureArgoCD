@@ -1,0 +1,62 @@
+# WAVE 2: backend. Its init container reads the seeded value from redis and
+# FAILS if it isn't there, so it depends on waves 0 and 1.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: backend }
+  template:
+    metadata:
+      labels: { app: backend }
+      annotations:
+        # Part 4: bump this to restart the backend so it reloads the greeting
+        config-version: "1"
+    spec:
+      initContainers:
+        - name: load-greeting
+          image: redis:7-alpine
+          command: ["sh", "-c"]
+          args:
+            - |
+              V=$(redis-cli -h redis get greeting 2>/dev/null)
+              if [ -z "$V" ]; then
+                echo "ERROR: 'greeting' not found in redis (did wave 0/1 run first?)"
+                exit 1
+              fi
+              echo "<h1>$V</h1><p>served by $(hostname)</p>" > /html/index.html
+              echo "Loaded greeting: $V"
+          volumeMounts:
+            - { name: html, mountPath: /html }
+      containers:
+        - name: nginx
+          image: nginx:1.27
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet: { path: /, port: 80 }
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          volumeMounts:
+            - { name: html, mountPath: /usr/share/nginx/html }
+          resources:
+            requests: { cpu: 20m, memory: 16Mi }
+            limits:   { cpu: 100m, memory: 64Mi }
+      volumes:
+        - name: html
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  selector: { app: backend }
+  ports:
+    - port: 80

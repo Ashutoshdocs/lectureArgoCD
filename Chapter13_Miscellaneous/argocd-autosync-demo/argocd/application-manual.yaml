@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: demo-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/<your-user>/argocd-autosync-demo.git
+    targetRevision: HEAD
+    path: manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gitops-demo
+  # No "automated" block: Argo CD only detects drift and waits for a manual sync.
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

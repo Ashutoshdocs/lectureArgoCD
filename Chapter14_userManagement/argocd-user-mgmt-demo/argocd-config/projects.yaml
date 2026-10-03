@@ -1,0 +1,61 @@
+# -----------------------------------------------------------------------------
+# AppProjects : hard boundaries for each team
+#   - which Git repos apps may come from
+#   - which cluster/namespace apps may deploy into
+#   - which Kubernetes kinds apps may create
+# Even an admin-created app in team-alpha cannot deploy outside these limits.
+# -----------------------------------------------------------------------------
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: team-alpha
+  namespace: argocd
+spec:
+  description: Team Alpha - owned by alice (developer)
+  sourceRepos:
+    - https://github.com/YOUR-GITHUB-USER/argocd-user-mgmt-demo.git
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: team-alpha
+  # Cluster-scoped resources allowed (Namespace only, so the app can create its ns)
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+  # Namespaced resources allowed
+  namespaceResourceWhitelist:
+    - group: ""
+      kind: Service
+    - group: ""
+      kind: ConfigMap
+    - group: apps
+      kind: Deployment
+  # Project-scoped role: a token for CI that can ONLY sync team-alpha apps
+  roles:
+    - name: ci-sync
+      description: CI pipeline can sync team-alpha apps
+      policies:
+        - p, proj:team-alpha:ci-sync, applications, get,  team-alpha/*, allow
+        - p, proj:team-alpha:ci-sync, applications, sync, team-alpha/*, allow
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: team-beta
+  namespace: argocd
+spec:
+  description: Team Beta - operated by bob (view + sync only)
+  sourceRepos:
+    - https://github.com/YOUR-GITHUB-USER/argocd-user-mgmt-demo.git
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: team-beta
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+  namespaceResourceWhitelist:
+    - group: ""
+      kind: Service
+    - group: ""
+      kind: ConfigMap
+    - group: apps
+      kind: Deployment

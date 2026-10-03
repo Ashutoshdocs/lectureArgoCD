@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hooks-demo
+  namespace: argocd
+  finalizers:
+    # Cascade delete: remove app resources when the Application is deleted.
+    # PostDelete hooks run after that.
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/<your-user>/argocd-hooks-demo.git
+    targetRevision: HEAD
+    path: manifests
+    directory:
+      recurse: true        # pick up manifests/app and manifests/hooks
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: hooks-demo
+  # No "automated" block on purpose: you trigger each sync yourself so you can
+  # watch the phases. Hooks run on EVERY sync, even when nothing changed.
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

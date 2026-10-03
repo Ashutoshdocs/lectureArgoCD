@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-backup-presync
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/sync-wave: "-1"
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  backoffLimit: 0            # fail fast so the demo doesn't retry for minutes
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: db-backup-presync
+          image: busybox:1.36
+          command: ["sh", "-c"]
+          args:
+            - |
+              echo "[PreSync | wave -1] Backing up current database state..."
+              sleep 5
+              echo "[PreSync | wave -1] Backup saved: backup-$(date +%Y%m%d-%H%M%S).sql"

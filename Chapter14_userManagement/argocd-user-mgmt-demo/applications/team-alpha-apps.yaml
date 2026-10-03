@@ -1,0 +1,45 @@
+# -----------------------------------------------------------------------------
+# Team Alpha applications (project: team-alpha)
+#   alpha-nginx     -> alice can sync / edit / delete
+#   alpha-protected -> alice can sync / edit but NOT delete (explicit deny)
+# -----------------------------------------------------------------------------
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: alpha-nginx
+  namespace: argocd
+  labels:
+    team: alpha
+spec:
+  project: team-alpha
+  source:
+    repoURL: https://github.com/YOUR-GITHUB-USER/argocd-user-mgmt-demo.git
+    targetRevision: main
+    path: manifests/team-alpha/nginx
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: team-alpha
+  syncPolicy:
+    # Manual sync on purpose, so you can demo who is allowed to press "Sync"
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: alpha-protected
+  namespace: argocd
+  labels:
+    team: alpha
+spec:
+  project: team-alpha
+  source:
+    repoURL: https://github.com/YOUR-GITHUB-USER/argocd-user-mgmt-demo.git
+    targetRevision: main
+    path: manifests/team-alpha/protected
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: team-alpha
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

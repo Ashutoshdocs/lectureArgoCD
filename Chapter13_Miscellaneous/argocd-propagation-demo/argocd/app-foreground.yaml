@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: demo-foreground
+  namespace: argocd
+  finalizers:
+    # Deleting this Application also deletes its resources (cascade).
+    # Use ".../background" instead for background cascade deletion.
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/<your-user>/argocd-propagation-demo.git
+    targetRevision: HEAD
+    path: manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: demo-foreground
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      # How Argo CD deletes resources it PRUNES (foreground | background | orphan)
+      - PrunePropagationPolicy=foreground
