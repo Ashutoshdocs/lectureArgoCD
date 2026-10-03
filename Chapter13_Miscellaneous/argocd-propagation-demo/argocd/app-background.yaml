@@ -10,9 +10,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/<your-user>/argocd-propagation-demo.git
+    repoURL: https://github.com/Ashutoshdocs/argocd-propagation-demo.git
     targetRevision: HEAD
-    path: manifests
+    path: Chapter13_Miscellaneous/argocd-propagation-demo/argocd/manifests
   destination:
     server: https://kubernetes.default.svc
     namespace: demo-background
