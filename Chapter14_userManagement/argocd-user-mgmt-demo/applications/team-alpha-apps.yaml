@@ -13,7 +13,7 @@ metadata:
 spec:
   project: team-alpha
   source:
-    repoURL: https://github.com/Ashutoshdocs/argocd-user-mgmt-demo.git
+    repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
     targetRevision: main
     path: Chapter14_userManagement/argocd-user-mgmt-demo/manifests/team-alpha/nginx
   destination:
@@ -34,7 +34,7 @@ metadata:
 spec:
   project: team-alpha
   source:
-    repoURL: https://github.com/Ashutoshdocs/argocd-user-mgmt-demo.git
+    repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
     targetRevision: main
     path: Chapter14_userManagement/argocd-user-mgmt-demo/manifests/team-alpha/protected
   destination:
