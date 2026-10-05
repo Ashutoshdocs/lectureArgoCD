@@ -1,0 +1,71 @@
+# Demo OpenLDAP server (osixia/openldap).
+# Data lives in emptyDir: a pod restart re-seeds it from the bootstrap LDIF,
+# which is exactly what you want for a repeatable classroom demo.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openldap
+  namespace: ldap
+  labels:
+    app: openldap
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openldap
+  template:
+    metadata:
+      labels:
+        app: openldap
+    spec:
+      containers:
+        - name: openldap
+          image: osixia/openldap:1.5.0
+          # - "ulimit -n 1024" avoids a known slapd hang/high-memory issue on
+          #   containerd (kubeadm default) where the open-files limit is huge.
+          # - "--copy-service" is required because the bootstrap LDIF is
+          #   mounted read-only from a ConfigMap.
+          command: ["/bin/sh", "-c"]
+          args: ["ulimit -n 1024 && exec /container/tool/run --copy-service"]
+          env:
+            - name: LDAP_ORGANISATION
+              value: "Example Org"
+            - name: LDAP_DOMAIN
+              value: "example.org"
+            - name: LDAP_TLS
+              value: "false"
+            - name: LDAP_READONLY_USER
+              value: "true"
+            - name: LDAP_READONLY_USER_USERNAME
+              value: "readonly"
+            - name: LDAP_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: openldap-credentials, key: LDAP_ADMIN_PASSWORD }
+            - name: LDAP_CONFIG_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: openldap-credentials, key: LDAP_CONFIG_PASSWORD }
+            - name: LDAP_READONLY_USER_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: openldap-credentials, key: LDAP_READONLY_USER_PASSWORD }
+          ports:
+            - name: ldap
+              containerPort: 389
+          readinessProbe:
+            tcpSocket:
+              port: 389
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          volumeMounts:
+            - name: bootstrap
+              mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom
+      volumes:
+        - name: bootstrap
+          configMap:
+            name: openldap-bootstrap

@@ -1,0 +1,5 @@
+# Proof step: grant Eve read-only Argo CD access by adding her to ops-team.
+dn: cn=ops-team,ou=groups,dc=example,dc=org
+changetype: modify
+add: member
+member: uid=eve,ou=people,dc=example,dc=org

@@ -1,0 +1,8 @@
+# Undo remove-charlie-from-dev-team.ldif
+dn: cn=dev-team,ou=groups,dc=example,dc=org
+changetype: modify
+add: member
+member: uid=charlie,ou=people,dc=example,dc=org
+-
+delete: member
+member: uid=diana,ou=people,dc=example,dc=org

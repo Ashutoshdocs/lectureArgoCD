@@ -1,0 +1,10 @@
+# Proof step: revoke Charlie's Argo CD access centrally, in LDAP only.
+# groupOfNames needs at least one member, so diana is added as a
+# placeholder before charlie is removed.
+dn: cn=dev-team,ou=groups,dc=example,dc=org
+changetype: modify
+add: member
+member: uid=diana,ou=people,dc=example,dc=org
+-
+delete: member
+member: uid=charlie,ou=people,dc=example,dc=org

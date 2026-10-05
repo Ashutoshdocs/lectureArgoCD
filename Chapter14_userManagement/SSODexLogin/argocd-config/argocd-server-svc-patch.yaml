@@ -1,0 +1,18 @@
+# Exposes Argo CD (and the bundled Dex, served under /api/dex) on
+#   https://<NODE-IP>:30443
+# Skip if you already applied this in the RemoteUserPermissionHandle demo.
+#
+#   kubectl -n argocd patch svc argocd-server --patch-file argocd-config/argocd-server-svc-patch.yaml
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+      nodePort: 30080
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: 8080
+      nodePort: 30443

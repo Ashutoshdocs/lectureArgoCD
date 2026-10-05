@@ -1,0 +1,50 @@
+# Enables SSO through Argo CD's bundled Dex, using LDAP as the identity provider.
+#
+# BEFORE APPLYING: replace NODE_IP with your node's IP, e.g.
+#   sed -i "s/NODE_IP/192.168.1.50/" argocd-config/argocd-cm-sso-patch.yaml
+#
+#   kubectl -n argocd patch configmap argocd-cm --patch-file argocd-config/argocd-cm-sso-patch.yaml
+#
+# How the URLs fit together:
+#   url                     -> https://NODE_IP:30443          (what the browser uses)
+#   Dex issuer   (auto)     -> https://NODE_IP:30443/api/dex
+#   Dex callback (auto)     -> https://NODE_IP:30443/api/dex/callback
+#   CLI callback (auto)     -> http://localhost:8085/auth/callback  (on the laptop)
+data:
+  # REQUIRED for SSO: the externally reachable Argo CD URL
+  url: https://NODE_IP:30443
+
+  dex.config: |
+    connectors:
+      - type: ldap
+        id: ldap
+        name: Company LDAP          # text on the "LOG IN VIA ..." button
+        config:
+          host: openldap.ldap.svc.cluster.local:389
+          insecureNoSSL: true       # demo only - use ldaps:// (636) in production
+          insecureSkipVerify: true
+
+          # Service account Dex uses to SEARCH the directory
+          bindDN: cn=readonly,dc=example,dc=org
+          bindPW: $dex.ldap.bindPW  # read from argocd-secret
+
+          usernamePrompt: Username
+
+          # 1) Find the user who is logging in
+          userSearch:
+            baseDN: ou=people,dc=example,dc=org
+            filter: "(objectClass=inetOrgPerson)"
+            username: uid           # what the user types
+            idAttr: uid
+            emailAttr: mail
+            nameAttr: cn
+            preferredUsernameAttr: uid
+
+          # 2) Find the groups that user belongs to -> "groups" claim
+          groupSearch:
+            baseDN: ou=groups,dc=example,dc=org
+            filter: "(objectClass=groupOfNames)"
+            userMatchers:
+              - userAttr: DN
+                groupAttr: member
+            nameAttr: cn            # group name sent to Argo CD, e.g. "dev-team"

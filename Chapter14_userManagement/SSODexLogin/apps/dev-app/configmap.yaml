@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dev-web-content
+  labels:
+    app: dev-web
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+    <head><title>dev-app (SSO demo)</title></head>
+    <body style="font-family:sans-serif;background:#eefbf1;text-align:center;padding-top:80px">
+      <h1 style="color:#1b7f3b">dev-app deployed by an SSO user</h1>
+      <p>Logged in through <b>Dex</b> &rarr; <b>LDAP</b>, authorized by group <b>dev-team</b></p>
+      <p>Namespace: <b>dev-ns</b> &middot; Project: <b>dev-project</b> &middot; NodePort <b>31003</b></p>
+    </body>
+    </html>

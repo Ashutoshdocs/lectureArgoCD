@@ -1,0 +1,18 @@
+# OPTIONAL (admin path). In the main demo, Charlie creates this app himself
+# after logging in with SSO. To pre-create it instead:
+#   kubectl apply -f applications/dev-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dev-app
+  namespace: argocd
+spec:
+  project: dev-project
+  source:
+    repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
+    targetRevision: main
+    path: Chapter14_userManagement/SSODexLogin/apps/dev-app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev-ns
+  syncPolicy: {}

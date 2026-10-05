@@ -1,0 +1,9 @@
+# Deploy the whole demo LDAP server with:  kubectl apply -k ldap/
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - namespace.yaml
+  - secret.yaml
+  - bootstrap-ldif-configmap.yaml
+  - deployment.yaml
+  - service.yaml

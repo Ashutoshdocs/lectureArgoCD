@@ -1,0 +1,63 @@
+# Seed data loaded into OpenLDAP on first start.
+#
+#   dc=example,dc=org
+#   ├── ou=people
+#   │   ├── uid=charlie   (Charlie Developer)  -> member of dev-team
+#   │   ├── uid=diana     (Diana Operator)     -> member of ops-team
+#   │   └── uid=eve       (Eve Newjoiner)      -> member of NO group
+#   └── ou=groups
+#       ├── cn=dev-team   -> Argo CD role:dev      (manage dev-app, no delete)
+#       └── cn=ops-team   -> Argo CD role:readonly (see everything, change nothing)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openldap-bootstrap
+  namespace: ldap
+data:
+  50-demo-data.ldif: |
+    dn: ou=people,dc=example,dc=org
+    objectClass: organizationalUnit
+    ou: people
+
+    dn: ou=groups,dc=example,dc=org
+    objectClass: organizationalUnit
+    ou: groups
+
+    dn: uid=charlie,ou=people,dc=example,dc=org
+    objectClass: inetOrgPerson
+    uid: charlie
+    cn: Charlie Developer
+    givenName: Charlie
+    sn: Developer
+    mail: charlie@example.org
+    userPassword: Charlie@123
+
+    dn: uid=diana,ou=people,dc=example,dc=org
+    objectClass: inetOrgPerson
+    uid: diana
+    cn: Diana Operator
+    givenName: Diana
+    sn: Operator
+    mail: diana@example.org
+    userPassword: Diana@123
+
+    dn: uid=eve,ou=people,dc=example,dc=org
+    objectClass: inetOrgPerson
+    uid: eve
+    cn: Eve Newjoiner
+    givenName: Eve
+    sn: Newjoiner
+    mail: eve@example.org
+    userPassword: Eve@123
+
+    dn: cn=dev-team,ou=groups,dc=example,dc=org
+    objectClass: groupOfNames
+    cn: dev-team
+    description: Developers - manage dev-app in Argo CD
+    member: uid=charlie,ou=people,dc=example,dc=org
+
+    dn: cn=ops-team,ou=groups,dc=example,dc=org
+    objectClass: groupOfNames
+    cn: ops-team
+    description: Operations - read-only view of all Argo CD apps
+    member: uid=diana,ou=people,dc=example,dc=org

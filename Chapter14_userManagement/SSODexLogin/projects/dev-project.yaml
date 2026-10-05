@@ -1,0 +1,21 @@
+# Fence for apps owned by the LDAP group dev-team.
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: dev-project
+  namespace: argocd
+spec:
+  description: dev-team project (SSO demo) - may only deploy into dev-ns
+  sourceRepos:
+    - https://github.com/Ashutoshdocs/lectureArgoCD.git
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: dev-ns
+  clusterResourceWhitelist: []
+  namespaceResourceWhitelist:
+    - group: ""
+      kind: ConfigMap
+    - group: ""
+      kind: Service
+    - group: apps
+      kind: Deployment

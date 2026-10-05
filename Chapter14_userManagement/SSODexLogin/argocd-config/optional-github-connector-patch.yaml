@@ -1,0 +1,53 @@
+# OPTIONAL (Appendix A of the README): LDAP + GitHub login side by side.
+# This REPLACES dex.config, so both connectors are listed here.
+#
+# 1. Create a GitHub OAuth App (GitHub > Settings > Developer settings > OAuth Apps):
+#      Homepage URL:               https://NODE_IP:30443
+#      Authorization callback URL: https://NODE_IP:30443/api/dex/callback
+# 2. Store its secret in argocd-secret:
+#      kubectl -n argocd patch secret argocd-secret \
+#        -p '{"stringData":{"dex.github.clientSecret":"<CLIENT_SECRET>"}}'
+# 3. Replace NODE_IP, <GITHUB_CLIENT_ID> and <YOUR_GITHUB_ORG> below, then:
+#      kubectl -n argocd patch configmap argocd-cm --patch-file argocd-config/optional-github-connector-patch.yaml
+#
+# GitHub groups arrive as "<org>:<team-slug>", e.g.  my-org:dev-team
+# so map them in RBAC with e.g.:   g, my-org:dev-team, role:dev
+data:
+  url: https://NODE_IP:30443
+  dex.config: |
+    connectors:
+      - type: ldap
+        id: ldap
+        name: Company LDAP
+        config:
+          host: openldap.ldap.svc.cluster.local:389
+          insecureNoSSL: true
+          insecureSkipVerify: true
+          bindDN: cn=readonly,dc=example,dc=org
+          bindPW: $dex.ldap.bindPW
+          usernamePrompt: Username
+          userSearch:
+            baseDN: ou=people,dc=example,dc=org
+            filter: "(objectClass=inetOrgPerson)"
+            username: uid
+            idAttr: uid
+            emailAttr: mail
+            nameAttr: cn
+            preferredUsernameAttr: uid
+          groupSearch:
+            baseDN: ou=groups,dc=example,dc=org
+            filter: "(objectClass=groupOfNames)"
+            userMatchers:
+              - userAttr: DN
+                groupAttr: member
+            nameAttr: cn
+
+      - type: github
+        id: github
+        name: GitHub
+        config:
+          clientID: <GITHUB_CLIENT_ID>
+          clientSecret: $dex.github.clientSecret
+          orgs:
+            - name: <YOUR_GITHUB_ORG>
+          teamNameField: slug

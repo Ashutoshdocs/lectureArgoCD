@@ -1,0 +1,30 @@
+# RBAC for SSO users - permissions come from LDAP GROUPS, not individual users.
+#
+# The policy lives in its own key "policy.sso.csv". Argo CD concatenates
+# policy.csv with every policy.<name>.csv key, so this coexists with the
+# alice/bob rules from the RemoteUserPermissionHandle demo.
+#
+#   kubectl -n argocd patch configmap argocd-rbac-cm --patch-file argocd-config/argocd-rbac-cm-sso-patch.yaml
+data:
+  # No default role: an SSO user in no mapped group (eve) gets NOTHING.
+  policy.default: ""
+
+  # Claims of the SSO token that RBAC "g," lines are matched against
+  scopes: "[groups, email]"
+
+  policy.sso.csv: |
+    # ---------------- role:dev  (LDAP group dev-team) ----------------
+    p, role:dev, applications, get,      dev-project/*, allow
+    p, role:dev, applications, create,   dev-project/*, allow
+    p, role:dev, applications, update,   dev-project/*, allow
+    p, role:dev, applications, sync,     dev-project/*, allow
+    p, role:dev, applications, override, dev-project/*, allow
+    p, role:dev, applications, action/*, dev-project/*, allow
+    p, role:dev, logs,         get,      dev-project/*, allow
+    p, role:dev, projects,     get,      dev-project,   allow
+    p, role:dev, applications, delete,   dev-project/*, deny
+
+    # ---------------- group -> role mapping ----------------
+    # LDAP group name (Dex "groups" claim)  ->  Argo CD role
+    g, dev-team, role:dev
+    g, ops-team, role:readonly
