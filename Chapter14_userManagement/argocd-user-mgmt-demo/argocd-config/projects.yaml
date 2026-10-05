@@ -45,7 +45,7 @@ metadata:
 spec:
   description: Team Beta - operated by bob (view + sync only)
   sourceRepos:
-    - https://github.com/YOUR-GITHUB-USER/argocd-user-mgmt-demo.git
+    - https://github.com/Ashutoshdocs/lectureArgoCD.git
   destinations:
     - server: https://kubernetes.default.svc
       namespace: team-beta
