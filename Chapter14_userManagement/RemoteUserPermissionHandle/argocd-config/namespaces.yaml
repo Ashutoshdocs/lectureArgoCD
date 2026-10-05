@@ -1,0 +1,16 @@
+# Target namespaces for each user's application.
+# Created by the ADMIN, because the AppProjects below do NOT allow
+# users to create cluster-scoped resources (like Namespaces).
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: alice-ns
+  labels:
+    owner: alice
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bob-ns
+  labels:
+    owner: bob

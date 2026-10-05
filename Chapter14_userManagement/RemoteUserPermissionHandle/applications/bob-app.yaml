@@ -1,0 +1,19 @@
+# OPTIONAL (admin path).
+# The main demo has Bob create this app himself from his laptop CLI.
+# If you prefer the admin to pre-create it, run:
+#   kubectl apply -f applications/bob-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: bob-app
+  namespace: argocd
+spec:
+  project: bob-project
+  source:
+    repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
+    targetRevision: main
+    path: Chapter14_userManagement/RemoteUserPermissionHandle/apps/bob-app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: bob-ns
+  syncPolicy: {}

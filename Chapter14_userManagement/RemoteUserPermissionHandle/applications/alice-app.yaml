@@ -1,0 +1,20 @@
+# OPTIONAL (admin path).
+# The main demo has Alice create this app herself from her laptop CLI.
+# If you prefer the admin to pre-create it, run:
+#   kubectl apply -f applications/alice-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: alice-app
+  namespace: argocd
+spec:
+  project: alice-project
+  source:
+    repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
+    targetRevision: main
+    path: Chapter14_userManagement/RemoteUserPermissionHandle/apps/alice-app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: alice-ns
+  # Manual sync: Alice decides when to sync / rollback.
+  syncPolicy: {}

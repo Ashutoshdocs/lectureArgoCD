@@ -1,0 +1,13 @@
+# Creates two LOCAL Argo CD users: alice and bob.
+#
+#   accounts.<user>: login      -> user can log in with username/password
+#                                  (UI + CLI). Add ",apiKey" to also allow tokens.
+#   accounts.<user>.enabled     -> "false" disables the user without deleting it
+#
+# Apply with:
+#   kubectl -n argocd patch configmap argocd-cm --patch-file argocd-cm-patch.yaml
+data:
+  accounts.alice: login
+  accounts.alice.enabled: "true"
+  accounts.bob: login
+  accounts.bob.enabled: "true"

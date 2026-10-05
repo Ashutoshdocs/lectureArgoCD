@@ -1,0 +1,54 @@
+# Argo CD RBAC for the demo.
+#
+# Policy line format:
+#   p, <role/user>, <resource>, <action>, <project>/<object>, <allow|deny>
+#   g, <user>, <role>                     (assign a user to a role)
+#
+# Rules of evaluation:
+#   - Anything NOT explicitly allowed is denied (policy.default is empty).
+#   - An explicit "deny" always wins over an "allow".
+#   - A user only SEES an application if they have "applications, get" on it,
+#     so alice cannot even list bob's app, and vice versa.
+#
+# Apply with:
+#   kubectl -n argocd patch configmap argocd-rbac-cm --patch-file argocd-rbac-cm-patch.yaml
+data:
+  # IMPORTANT: no default role. If this were "role:readonly",
+  # alice and bob would be able to see each other's applications.
+  policy.default: ""
+
+  scopes: "[groups]"
+
+  policy.csv: |
+    # ------------------------------------------------------------------
+    # ALICE  -> full day-to-day control of apps in "alice-project" only
+    # ------------------------------------------------------------------
+    p, role:alice-role, applications, get,      alice-project/*, allow
+    p, role:alice-role, applications, create,   alice-project/*, allow
+    p, role:alice-role, applications, update,   alice-project/*, allow
+    p, role:alice-role, applications, sync,     alice-project/*, allow
+    p, role:alice-role, applications, override, alice-project/*, allow
+    p, role:alice-role, applications, action/*, alice-project/*, allow
+    p, role:alice-role, logs,         get,      alice-project/*, allow
+    p, role:alice-role, projects,     get,      alice-project,   allow
+    # Explicitly forbid deleting the application (deny beats allow)
+    p, role:alice-role, applications, delete,   alice-project/*, deny
+
+    # ------------------------------------------------------------------
+    # BOB    -> full day-to-day control of apps in "bob-project" only
+    # ------------------------------------------------------------------
+    p, role:bob-role, applications, get,      bob-project/*, allow
+    p, role:bob-role, applications, create,   bob-project/*, allow
+    p, role:bob-role, applications, update,   bob-project/*, allow
+    p, role:bob-role, applications, sync,     bob-project/*, allow
+    p, role:bob-role, applications, override, bob-project/*, allow
+    p, role:bob-role, applications, action/*, bob-project/*, allow
+    p, role:bob-role, logs,         get,      bob-project/*, allow
+    p, role:bob-role, projects,     get,      bob-project,   allow
+    p, role:bob-role, applications, delete,   bob-project/*, deny
+
+    # ------------------------------------------------------------------
+    # User -> role bindings
+    # ------------------------------------------------------------------
+    g, alice, role:alice-role
+    g, bob,   role:bob-role

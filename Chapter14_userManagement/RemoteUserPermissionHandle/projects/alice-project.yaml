@@ -1,0 +1,26 @@
+# AppProject = the "fence" around Alice's work.
+# Even if RBAC were misconfigured, apps in this project can ONLY:
+#   - pull from the lectureArgoCD GitHub repo
+#   - deploy to namespace alice-ns on the local cluster
+#   - create Deployments, Services and ConfigMaps (no cluster-scoped objects)
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: alice-project
+  namespace: argocd
+spec:
+  description: Alice's project - may only deploy into alice-ns
+  sourceRepos:
+    - https://github.com/Ashutoshdocs/lectureArgoCD.git
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: alice-ns
+  # Empty list = no cluster-scoped resources (Namespaces, ClusterRoles, CRDs...)
+  clusterResourceWhitelist: []
+  namespaceResourceWhitelist:
+    - group: ""
+      kind: ConfigMap
+    - group: ""
+      kind: Service
+    - group: apps
+      kind: Deployment

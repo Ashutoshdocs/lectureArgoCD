@@ -1,0 +1,18 @@
+# Exposes the Argo CD API/UI server on fixed NodePorts so the
+# Windows laptop can reach it at  https://<NODE-IP>:30443
+#
+# Apply with:
+#   kubectl -n argocd patch svc argocd-server --patch-file argocd-server-svc-patch.yaml
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+      nodePort: 30080
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: 8080
+      nodePort: 30443

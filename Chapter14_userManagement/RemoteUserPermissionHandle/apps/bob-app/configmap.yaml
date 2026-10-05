@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bob-web-content
+  labels:
+    app: bob-web
+    owner: bob
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+    <head><title>Bob's App</title></head>
+    <body style="font-family:sans-serif;background:#fff3e0;text-align:center;padding-top:80px">
+      <h1 style="color:#c25e00">Hello from BOB's application</h1>
+      <p>Namespace: <b>bob-ns</b> &middot; Argo CD project: <b>bob-project</b></p>
+      <p>Served by <b>Apache httpd</b> on NodePort <b>31002</b></p>
+    </body>
+    </html>

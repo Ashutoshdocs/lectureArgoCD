@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alice-web-content
+  labels:
+    app: alice-web
+    owner: alice
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+    <head><title>Alice's App</title></head>
+    <body style="font-family:sans-serif;background:#e8f4ff;text-align:center;padding-top:80px">
+      <h1 style="color:#0b5cad">Hello from ALICE's application</h1>
+      <p>Namespace: <b>alice-ns</b> &middot; Argo CD project: <b>alice-project</b></p>
+      <p>Served by <b>nginx</b> on NodePort <b>31001</b></p>
+    </body>
+    </html>
