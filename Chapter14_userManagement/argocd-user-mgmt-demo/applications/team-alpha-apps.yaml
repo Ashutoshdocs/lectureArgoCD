@@ -36,7 +36,7 @@ spec:
   source:
     repoURL: https://github.com/YOUR-GITHUB-USER/argocd-user-mgmt-demo.git
     targetRevision: main
-    path: manifests/team-alpha/protected
+    path: Chapter14_userManagement/argocd-user-mgmt-demo/manifests/team-alpha/protected
   destination:
     server: https://kubernetes.default.svc
     namespace: team-alpha
