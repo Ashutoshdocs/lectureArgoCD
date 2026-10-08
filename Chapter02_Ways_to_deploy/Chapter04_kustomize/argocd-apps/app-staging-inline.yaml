@@ -1,0 +1,55 @@
+# BONUS: no overlay folder at all.
+# ArgoCD itself customises base/ through `spec.source.kustomize`.
+# Same base, new environment, defined only in the ArgoCD Application -> NodePort 30083
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kustomize-staging
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
+    targetRevision: main
+    path: Chapter02_Ways_to_deploy/Chapter04_kustomize/base
+    kustomize:
+      namePrefix: staging-
+      namespace: staging
+      commonLabels:
+        environment: staging
+      commonAnnotations:
+        kustomize.demo/layer: staging-argocd-inline
+      images:
+        - nginx:1.26-alpine
+      replicas:
+        - name: student-app
+          count: 2
+      patches:
+        - target:
+            kind: Service
+            name: student-service
+          patch: |-
+            - op: replace
+              path: /spec/ports/0/nodePort
+              value: 30083
+        - target:
+            kind: ConfigMap
+            name: student-config
+          patch: |-
+            - op: replace
+              path: /data/APP_COLOR
+              value: "#a855f7"
+            - op: replace
+              path: /data/APP_MESSAGE
+              value: "STAGING: no overlay folder. ArgoCD Application spec.source.kustomize did all of this."
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: staging
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

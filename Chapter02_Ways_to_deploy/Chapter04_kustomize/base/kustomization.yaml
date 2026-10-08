@@ -1,0 +1,39 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - deployment.yaml
+  - service.yaml
+
+# Labels on every object AND on pod templates (pods read `environment` into the page).
+# Selectors are left alone so overlays can change the value safely.
+labels:
+  - pairs:
+      environment: base
+    includeSelectors: false
+    includeTemplates: true
+
+commonAnnotations:
+  kustomize.demo/layer: base
+
+configMapGenerator:
+  # App settings -> env vars. Overlays MERGE into this to change colour/message.
+  - name: student-config
+    literals:
+      - APP_COURSE=DevOps
+      - APP_TRAINER=Ashutosh
+      - "APP_MESSAGE=Rendered straight from the base. No overlay applied."
+      - "APP_COLOR=#64748b"
+  # The ONE web page. It lives only in base; overlays never copy it.
+  - name: student-html
+    files:
+      - html/index.html
+  - name: student-nginx-conf
+    files:
+      - nginx/default.conf.template
+
+secretGenerator:
+  - name: student-secret
+    literals:
+      - username=admin
+      - password=Pass@123

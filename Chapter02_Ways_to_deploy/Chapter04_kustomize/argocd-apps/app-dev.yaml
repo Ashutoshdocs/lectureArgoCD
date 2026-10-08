@@ -1,0 +1,23 @@
+# ArgoCD Application: deploys overlays/dev -> namespace dev, NodePort 30081
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kustomize-dev
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
+    targetRevision: main
+    path: Chapter02_Ways_to_deploy/Chapter04_kustomize/overlays/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev                   # matches `namespace: dev` in the overlay
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

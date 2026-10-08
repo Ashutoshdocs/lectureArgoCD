@@ -1,0 +1,24 @@
+# ArgoCD Application: deploys base/ alone (no overlay) -> NodePort 30080
+# ArgoCD sees kustomization.yaml in the path and runs `kustomize build` itself.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kustomize-base
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io   # delete app -> delete its resources
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
+    targetRevision: main
+    path: Chapter02_Ways_to_deploy/Chapter04_kustomize/base
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: base                  # base has no `namespace:`, so ArgoCD puts it here
+  syncPolicy:
+    automated:
+      prune: true                    # removes old hashed ConfigMaps after a change
+      selfHeal: true                 # reverts manual kubectl edits
+    syncOptions:
+      - CreateNamespace=true

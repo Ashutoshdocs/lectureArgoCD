@@ -1,0 +1,42 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Pull in base untouched.
+resources:
+  - ../../base
+
+namespace: dev
+namePrefix: dev-
+
+labels:
+  - pairs:
+      environment: development
+      owner: devops
+    includeSelectors: false
+    includeTemplates: true
+
+commonAnnotations:
+  kustomize.demo/layer: dev-overlay
+  createdBy: Ashutosh
+
+replicas:
+  - name: student-app
+    count: 1
+
+# Change only two keys of the base ConfigMap; course/trainer stay from base.
+configMapGenerator:
+  - name: student-config
+    behavior: merge
+    literals:
+      - "APP_COLOR=#3b82f6"
+      - "APP_MESSAGE=DEV overlay: namespace dev, prefix dev-, 1 replica, NodePort 30081."
+
+patches:
+  # Give dev its own NodePort so it can run next to base and prod.
+  - target:
+      kind: Service
+      name: student-service
+    patch: |-
+      - op: replace
+        path: /spec/ports/0/nodePort
+        value: 30081

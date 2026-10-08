@@ -1,0 +1,22 @@
+# App of Apps: apply this ONE file and ArgoCD creates all the apps in this folder.
+#   kubectl apply -f argocd-apps/root-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kustomize-root
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Ashutoshdocs/lectureArgoCD.git
+    targetRevision: main
+    path: Chapter02_Ways_to_deploy/Chapter04_kustomize/argocd-apps
+    directory:
+      exclude: root-app.yaml        # don't manage itself
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

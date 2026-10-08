@@ -1,0 +1,47 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+namespace: prod
+namePrefix: prod-
+
+labels:
+  - pairs:
+      environment: production
+      owner: devops
+    includeSelectors: false
+    includeTemplates: true
+
+commonAnnotations:
+  kustomize.demo/layer: prod-overlay
+  createdBy: Ashutosh
+
+replicas:
+  - name: student-app
+    count: 3
+
+# Image override: base uses nginx:1.25-alpine, prod gets 1.27-alpine.
+images:
+  - name: nginx
+    newTag: 1.27-alpine
+
+configMapGenerator:
+  - name: student-config
+    behavior: merge
+    literals:
+      - "APP_COLOR=#22c55e"
+      - "APP_MESSAGE=PROD overlay: namespace prod, prefix prod-, 3 replicas, nginx 1.27, bigger limits, NodePort 30082."
+
+patches:
+  # Strategic-merge patch from a file: bigger CPU/memory limits.
+  - path: resources-patch.yaml
+  # JSON6902 inline patch: prod NodePort.
+  - target:
+      kind: Service
+      name: student-service
+    patch: |-
+      - op: replace
+        path: /spec/ports/0/nodePort
+        value: 30082
